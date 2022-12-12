@@ -1,16 +1,24 @@
 <template>
   <div class="calculator">
-    <div v-if="showedHistory" class="history">
-      <p
-        v-for="item in history"
-        :key="item"
-        @click="onClickHistoryItem(item)"
-      >
-        {{ item }}
-      </p>
-    </div>
-    <div v-if="!showedHistory" class="expression">
-      {{ expression }}
+    <div class="history">
+      <div v-show="showedHistory" class="history_action" @click="clearHistory">
+        <img src="../assets/delete.svg" alt="">
+      </div>
+      <div v-show="!showedHistory" class="history_action" @click="showHistory">
+        <img src="../assets/clock.svg" alt="">
+      </div>
+      <div v-show="showedHistory" class="history_content">
+        <p
+          v-for="item in history"
+          :key="item"
+          @click="onClickHistoryItem(item)"
+        >
+          {{ item }}
+        </p>
+      </div>
+      <div v-show="!showedHistory" class="expression">
+        {{ expression }}
+      </div>
     </div>
     <div class="result">
       {{ result }}
@@ -36,8 +44,7 @@ import { evaluate } from 'mathjs';
 export default {
   name: 'Calculator',
   props: {
-    isDark: Boolean,
-    showedHistory: Boolean
+    isDark: Boolean
   },
   data() {
     return {
@@ -73,13 +80,17 @@ export default {
       lastBracket: null,
       message: '',
       operations: [' % ', ' * ', ' / ', ' + ', ' - '],
-      isCalculated: false
+      isCalculated: false,
+      showedHistory: false
     }
   },
   methods: {
     onPressKey(value) {
       if (value === 'back') {
-        this.result = String(this.result).slice(0, this.result.length - 1);
+        if (this.result.at(-1) === '(' || this.result.at(-1) === ')') {
+          this.lastBracket = null;
+        }
+        this.result = this.result.slice(0, this.result.length - 1);
         if (this.isCalculated) {
           this.expression = '';
           this.isCalculated = false;
@@ -87,10 +98,12 @@ export default {
       } else if (value === 'c') {
         this.result = '';
         this.expression = '';
+        this.lastBracket = null;
+        this.isCalculated = false;
       } else if (value === ' = ') {
         if (this.result) this.expression += this.result;
         this.calculate(this.expression);
-        this.history.push(this.expression);
+        this.isCalculated = true;
       } else if (this.operations.includes(value)) {
         if (this.isCalculated) {
           this.expression = this.result + value;
@@ -132,19 +145,32 @@ export default {
     },
 
     calculate(expression) {
-      try {
-        this.result = evaluate(expression);
-        this.isCalculated = true;
-      }
-      catch {
-        this.result = '';
-        this.message = 'Некорректное выражение';
-        setTimeout(() => {this.message = ''}, 1500);
+      if (expression) {
+        try {
+          this.result = String(evaluate(expression));
+          this.history.push(expression);
+        }
+        catch {
+          this.result = '';
+          this.lastBracket = null;
+          this.message = 'Некорректное выражение';
+          setTimeout(() => {this.message = ''}, 1500);
+        }
       }
     },
 
     onClickHistoryItem(item) {
       this.calculate(item);
+      this.expression = '';
+    },
+
+    showHistory() {
+      this.showedHistory = true;
+    },
+
+    clearHistory() {
+      this.history = [];
+      this.showedHistory = false;
     }
   }
 }
@@ -155,25 +181,36 @@ export default {
   position: relative;
   margin-bottom: 2rem;
   text-align: right;
+  color: #979797;
   @media (max-height: 650px) {
     margin-bottom: 1.5rem;
   }
-  .history, .expression {
-    color: #979797;
-  }
   .history {
-    height: calc((1rem + 10px) * 3);
-    overflow-y: auto;
-    @media (max-height: 650px) {
-      height: calc((.8rem + 10px) * 3);
-      font-size: .8rem;
-    }
-    p {
-      margin-top: .5rem;
+    display: flex;
+    &_action {
       cursor: pointer;
+      margin: 0 .5rem;
+    }
+    &_content, .expression {
+      flex-grow: 1;
+      height: calc((1rem + 10px) * 3);
+      overflow-y: auto;
       @media (max-height: 650px) {
-        margin-top: .3rem;
+        height: calc((.8rem + 10px) * 3);
+        font-size: .8rem;
       }
+      p {
+        margin-top: .5rem;
+        cursor: pointer;
+        @media (max-height: 650px) {
+          margin-top: .3rem;
+        }
+      }
+    }
+    .expression {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
     }
   }
   .result {
