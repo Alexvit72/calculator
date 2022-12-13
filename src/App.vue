@@ -16,8 +16,8 @@
         </button>
       </div>
       <button class="menu_theme" @click="isDark = !isDark">
-        <img v-show="isDark" src="./assets/sun.svg" alt="">
-        <img v-show="!isDark" src="./assets/moon.svg" alt="">
+        <img v-show="isDark" src="./assets/icons/sun.svg" alt="">
+        <img v-show="!isDark" src="./assets/icons/moon.svg" alt="">
       </button>
     </div>
     <div class="main">
@@ -67,7 +67,7 @@ body {
 }
 
 #app {
-  background: #cccdcf;
+  background: $light-gray-color;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -82,27 +82,28 @@ body {
 .bg {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
   background: #fff;
   width: 100%;
   height: 100%;
   max-width: 400px;
   max-height: 800px;
-  padding: 0 1.25rem;
+  padding: 0 1.25rem 2rem;
   border-radius: 20px;
   @media (max-width: 600px) {
     max-width: 100vw;
     max-height: 100vh;
     border-radius: 0;
   }
+  @media (max-height: 650px) {
+    padding-bottom: 1.5rem;
+  }
   .menu {
     display: flex;
     justify-content: space-between;
     width: 100%;
-    margin-top: 2rem;
+    margin: 2rem 0 1rem;
     @media (max-height: 650px) {
-      margin-top: 1.5rem;
+      margin: 1.5rem 0 .8rem;
     }
     &_tool {
       button {
@@ -110,12 +111,16 @@ body {
         margin: 0 .5rem;
         padding: .5rem 0.8rem;
         background: none;
-        color: #979797;
+        color: $default-color;
         font-weight: 700;
         border: none;
         border-radius: 1.25rem;
+        @media (max-height: 650px) {
+          font-size: .8rem;
+          padding: .3rem 0.6rem;
+        }
         &.active {
-          background: #03ab95;
+          background: $primary-color;
           color: #fff;
         }
       }
@@ -129,12 +134,13 @@ body {
   }
   .main {
     width: 100%;
+    flex-grow: 1;
   }
   &.dark {
-    background: #1c1c1c;
+    background: $dark-background-color;
     .menu_tool .active {
       background: #fff;
-      color: #03ab95;
+      color: $primary-color;
     }
   }
 }

@@ -1,11 +1,14 @@
 <template>
   <div class="calculator">
     <div class="history">
-      <div v-show="showedHistory" class="history_action" @click="clearHistory">
-        <img src="../assets/delete.svg" alt="">
+      <div v-show="showedHistory" class="history_action close" @click="closeHistory">
+        &#215;
+      </div>
+      <div v-show="showedHistory && history.length" class="history_action" @click="clearHistory">
+        <img src="../assets/icons/delete.svg" alt="">
       </div>
       <div v-show="!showedHistory" class="history_action" @click="showHistory">
-        <img src="../assets/clock.svg" alt="">
+        <img src="../assets/icons/clock.svg" alt="">
       </div>
       <div v-show="showedHistory" class="history_content">
         <p
@@ -20,7 +23,7 @@
         {{ expression }}
       </div>
     </div>
-    <div class="result">
+    <div v-show="!showedHistory" class="result">
       {{ result }}
     </div>
     <div class="control">
@@ -40,6 +43,8 @@
 
 <script>
 import { evaluate } from 'mathjs';
+import { formatResult } from '../utils';
+import { calculatorButtons } from '../utils';
 
 export default {
   name: 'Calculator',
@@ -48,45 +53,23 @@ export default {
   },
   data() {
     return {
-      buttons: [
-        { sign: 'C', type: 'delete', value: 'c' },
-        { sign: '&#8676;', type: 'delete', value: 'back' },
-        { sign: '&#37;', type: 'operation', value: ' % ' },
-        { sign: '&#247;', type: 'operation', value: ' / ' },
-
-        { sign: '7', type: 'number', value: '7' },
-        { sign: '8', type: 'number', value: '8' },
-        { sign: '9', type: 'number', value: '9' },
-        { sign: '&#215;', type: 'operation', value: ' * ' },
-
-        { sign: '4', type: 'number', value: '4' },
-        { sign: '5', type: 'number', value: '5' },
-        { sign: '6', type: 'number', value: '6' },
-        { sign: '&#8722;', type: 'operation', value: ' - ' },
-
-        { sign: '1', type: 'number', value: '1' },
-        { sign: '2', type: 'number', value: '2' },
-        { sign: '3', type: 'number', value: '3' },
-        { sign: '&#43;', type: 'operation', value: ' + ' },
-
-        { sign: '&#40;&#41;', type: 'number', value: '()' },
-        { sign: '0', type: 'number', value: '0' },
-        { sign: '&#183;', type: 'number', value: '.' },
-        { sign: '&#61;', type: 'operation', value: ' = ' }
-      ],
+      buttons: calculatorButtons,
       result: '',
       history: [],
       expression: '',
       lastBracket: null,
       message: '',
-      operations: [' % ', ' * ', ' / ', ' + ', ' - '],
+      operations: ['%', '*', '/', '+', '-'],
       isCalculated: false,
       showedHistory: false
     }
   },
+  mounted() {
+    document.addEventListener('keydown', (e) => this.onPressKey(e.key));
+  },
   methods: {
     onPressKey(value) {
-      if (value === 'back') {
+      if (value === 'back' || value === 'Backspace') {
         if (this.result.at(-1) === '(' || this.result.at(-1) === ')') {
           this.lastBracket = null;
         }
@@ -100,16 +83,19 @@ export default {
         this.expression = '';
         this.lastBracket = null;
         this.isCalculated = false;
-      } else if (value === ' = ') {
+      } else if (value === '=' || value === 'Enter') {
         if (this.result) this.expression += this.result;
         this.calculate(this.expression);
+        if (!this.message) {
+          this.history.push(this.expression);
+        }
         this.isCalculated = true;
       } else if (this.operations.includes(value)) {
         if (this.isCalculated) {
-          this.expression = this.result + value;
+          this.expression = this.result + ` ${value} `;
           this.isCalculated = false;
         } else {
-          this.expression += this.result + value;
+          this.expression += this.result + ` ${value} `;
         }
         this.result = '';
       } else {
@@ -127,12 +113,14 @@ export default {
           if (value === '()') {
             if (this.lastBracket === '(') {
               this.lastBracket = ')';
-              this.expression += this.result + ')';
-              this.result = '';
+              this.result += ')';
             } else {
               this.lastBracket = '(';
               this.result += '(';
             }
+          } else if (value === '(' || value === ')') {
+            this.lastBracket = value;
+            this.result += value;
           } else if (value === '.') {
             if (this.result) {
               this.result += value;
@@ -147,10 +135,10 @@ export default {
     calculate(expression) {
       if (expression) {
         try {
-          this.result = String(evaluate(expression));
-          this.history.push(expression);
+          this.result = formatResult(evaluate(expression).toString(), 2, 8);
+          this.message = '';
         }
-        catch {
+        catch(error) {
           this.result = '';
           this.lastBracket = null;
           this.message = 'Некорректное выражение';
@@ -159,18 +147,23 @@ export default {
       }
     },
 
-    onClickHistoryItem(item) {
-      this.calculate(item);
-      this.expression = '';
-    },
-
     showHistory() {
       this.showedHistory = true;
     },
 
+    closeHistory() {
+      this.showedHistory = false;
+    },
+
+    onClickHistoryItem(item) {
+      this.calculate(item);
+      this.expression = '';
+      this.closeHistory();
+    },
+
     clearHistory() {
       this.history = [];
-      this.showedHistory = false;
+      this.closeHistory();
     }
   }
 }
@@ -179,24 +172,32 @@ export default {
 <style lang="scss">
 .calculator {
   position: relative;
-  margin-bottom: 2rem;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
   text-align: right;
-  color: #979797;
-  @media (max-height: 650px) {
-    margin-bottom: 1.5rem;
-  }
+  color: $default-color;
   .history {
+    justify-self: flex-start;
+    flex-grow: 1;
     display: flex;
     &_action {
       cursor: pointer;
       margin: 0 .5rem;
+      &.close {
+        font-size: 2.8rem;
+        line-height: 0.63;
+      }
     }
     &_content, .expression {
       flex-grow: 1;
-      height: calc((1rem + 10px) * 3);
+      margin-bottom: 1rem;
+      //height: calc((1rem + 10px) * 3);
       overflow-y: auto;
       @media (max-height: 650px) {
-        height: calc((.8rem + 10px) * 3);
+        //height: calc((.8rem + 10px) * 3);
+        margin-bottom: .5rem;
         font-size: .8rem;
       }
       p {
@@ -216,11 +217,12 @@ export default {
   .result {
     display: flex;
     justify-content: flex-end;
-    margin: 1rem 0 2rem;
+    margin-bottom: 2rem;
     font-size: 5rem;
-    color: #03ab95;
+    color: $primary-color;
     height: calc(5rem + 10px);
     white-space: nowrap;
+    overflow: hidden;
     @media (max-width: 600px) {
       margin: 1rem 0 1rem;
       font-size: 4rem;
@@ -244,23 +246,28 @@ export default {
       border-radius: 50%;
       background: none;
       font-size: 2rem;
-      color: #979797;
+      font-weight: 600;
+      color: $default-color;
       cursor: pointer;
       @media (max-width: 400px) {
         width: calc((100vw - 5.5rem) / 4);
         height: calc((100vw - 5.5rem) / 4);
       }
+      @media (max-height: 650px) {
+        width: calc((90vw - 5.5rem) / 4);
+        height: calc((90vw - 5.5rem) / 4);
+      }
       &.operation {
-        color: #03ab95;
+        color: $primary-color;
         &.dark {
           background: #fff;
         }
       }
       &.delete {
-        color: #515c58;
+        color: $dark-gray-color;
         &.dark {
           color: #fff;
-          background: #979797;
+          background: $default-color;
         }
       }
     }
@@ -270,7 +277,7 @@ export default {
     bottom: 20%;
     left: 0;
     right: 0;
-    background: #979797;
+    background: $default-color;
     color: #fff;
     text-align: center;
     padding: 1rem;
