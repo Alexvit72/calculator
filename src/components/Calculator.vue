@@ -1,16 +1,13 @@
 <template>
   <div class="calculator">
-    <div class="history">
-      <div v-show="showedHistory" class="history_action close" @click="closeHistory">
+    <div v-show="showedHistory" class="history">
+      <div class="action close" @click="closeHistory">
         &#215;
       </div>
-      <div v-show="showedHistory && history.length" class="history_action" @click="clearHistory">
+      <div v-show="!!history.length" class="action" @click="clearHistory">
         <img src="../assets/icons/delete.svg" alt="">
       </div>
-      <div v-show="!showedHistory" class="history_action" @click="showHistory">
-        <img src="../assets/icons/clock.svg" alt="">
-      </div>
-      <div v-show="showedHistory" class="history_content">
+      <div class="history_content">
         <p
           v-for="item in history"
           :key="item"
@@ -19,12 +16,19 @@
           {{ item }}
         </p>
       </div>
-      <div v-show="!showedHistory" class="expression">
-        {{ expression }}
-      </div>
     </div>
-    <div v-show="!showedHistory" class="result">
-      {{ result }}
+    <div v-show="!showedHistory" class="current">
+      <div class="current_data">
+        <div class="action" @click="showHistory">
+          <img src="../assets/icons/clock.svg" alt="">
+        </div>
+        <div class="expression">
+          <p>{{ expression }}</p>
+        </div>
+      </div>
+      <div class="current_result">
+        {{ result }}
+      </div>
     </div>
     <div class="control">
       <button
@@ -142,7 +146,7 @@ export default {
           this.result = '';
           this.lastBracket = null;
           this.message = 'Некорректное выражение';
-          setTimeout(() => {this.message = ''}, 1500);
+          setTimeout(() => {this.message = ''}, 1300);
         }
       }
     },
@@ -171,67 +175,80 @@ export default {
 
 <style lang="scss">
 .calculator {
-  position: relative;
-  height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
-  text-align: right;
-  color: $default-color;
+  justify-content: space-between;
+  height: 100%;
   .history {
-    justify-self: flex-start;
-    flex-grow: 1;
+    height: 230px;
     display: flex;
-    &_action {
-      cursor: pointer;
-      margin: 0 .5rem;
-      &.close {
-        font-size: 2.8rem;
-        line-height: 0.63;
-      }
+    align-items: flex-start;
+    @media (max-width: 600px) {
+      height: calc(100vh - ((100vw - 5.5rem) / 4 * 5 + 4rem) - 7rem);
     }
-    &_content, .expression {
-      flex-grow: 1;
-      margin-bottom: 1rem;
-      //height: calc((1rem + 10px) * 3);
+    @media (max-height: 650px) {
+      height: calc(100vh - ((100vw - 5.5rem) / 4 * 5 + 4rem) - 4rem);
+    }
+    &_content {
+      width: 100%;
+      max-height: calc(100% - 1.5rem);
       overflow-y: auto;
       @media (max-height: 650px) {
-        //height: calc((.8rem + 10px) * 3);
-        margin-bottom: .5rem;
         font-size: .8rem;
       }
       p {
         margin-top: .5rem;
         cursor: pointer;
+      }
+    }
+  }
+  .current {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    &_data {
+      display: flex;
+      .expression {
+        width: 100%;
+        height: 120px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        @media (max-width: 600px) {
+          height: calc(100vh - ((100vw - 5.5rem) / 4 * 5 + 4rem) - 13rem);
+        }
         @media (max-height: 650px) {
-          margin-top: .3rem;
+          height: calc(100vh - ((100vw - 5.5rem) / 4 * 5 + 4rem) - 7rem);
+        }
+        p {
+          max-height: 100%;
+          overflow-y: auto;
         }
       }
     }
-    .expression {
+    &_result {
       display: flex;
-      flex-direction: column;
       justify-content: flex-end;
+      margin-bottom: 1rem;
+      font-size: 5rem;
+      color: $primary-color;
+      overflow: hidden;
+      @media (max-width: 600px) {
+        font-size: 4rem;
+      }
+      @media (max-height: 650px) {
+        margin-bottom: .5rem;
+        font-size: 3rem;
+      }
     }
   }
-  .result {
-    display: flex;
-    justify-content: flex-end;
-    margin-bottom: 2rem;
-    font-size: 5rem;
-    color: $primary-color;
-    height: calc(5rem + 10px);
-    white-space: nowrap;
-    overflow: hidden;
-    @media (max-width: 600px) {
-      margin: 1rem 0 1rem;
-      font-size: 4rem;
-      height: calc(4rem + 10px);
-    }
-    @media (max-height: 650px) {
-      margin: .5rem 0 .5rem;
-      font-size: 3rem;
-      height: calc(3rem + 10px);
+  .action {
+    cursor: pointer;
+    margin: 0 .5rem;
+    &.close {
+      font-size: 2.8rem;
+      line-height: 0.63;
     }
   }
   .control {
@@ -246,7 +263,6 @@ export default {
       border-radius: 50%;
       background: none;
       font-size: 2rem;
-      font-weight: 600;
       color: $default-color;
       cursor: pointer;
       @media (max-width: 400px) {

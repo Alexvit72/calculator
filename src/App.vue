@@ -22,7 +22,7 @@
     </div>
     <div class="main">
       <Calculator v-show="tool === 'calculator'" :isDark="isDark" />
-      <Converter v-show="tool === 'converter'" />
+      <Converter v-show="tool === 'converter'" :isDark="isDark" />
     </div>
   </div>
 </template>
@@ -130,11 +130,18 @@ body {
       border: none;
       background: none;
       margin-left: 1rem;
+      padding-top: 5px;
+      @media (max-height: 650px) {
+        padding-top: 0;
+      }
     }
   }
   .main {
     width: 100%;
     flex-grow: 1;
+    position: relative;
+    text-align: right;
+    color: $default-color;
   }
   &.dark {
     background: $dark-background-color;
