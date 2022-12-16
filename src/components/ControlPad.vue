@@ -4,6 +4,7 @@
       v-for="button in buttons" :key="button.sign"
       v-html="button.sign"
       :class="`control_button ${button.type} ${isDark ? 'dark' : ''}`"
+      :disabled="getDisabled(button.value)"
       @click="() => onClick(button.value)"
     >
     </button>
@@ -11,17 +12,26 @@
 </template>
 
 <script>
-import { converterButtons } from '../utils';
+import { buttons } from '../utils';
 
 export default {
   name: 'ControlPad',
   props: {
     isDark: Boolean,
-    onClick: Function
+    onClick: Function,
+    tool: String,
+    disabledButtons: Array
   },
-  data() {
-    return {
-      buttons: converterButtons
+  computed: {
+    buttons() {
+      return buttons[this.tool];
+    }
+  },
+  methods: {
+    getDisabled(value) {
+      if (this.tool === 'converter') {
+        return (this.disabledButtons ? this.disabledButtons.includes(value) : false);
+      } else return false;
     }
   }
 }
@@ -42,6 +52,9 @@ export default {
     font-size: 2rem;
     color: $default-color;
     cursor: pointer;
+    &.dark {
+      color: $light-gray-color;
+    }
     @media (max-width: 400px) {
       width: calc((100vw - 5.5rem) / 4);
       height: calc((100vw - 5.5rem) / 4);
@@ -61,6 +74,15 @@ export default {
       &.dark {
         color: #fff;
         background: $default-color;
+      }
+    }
+    &[disabled] {
+      color: $light-gray-color;
+      &.dark {
+        color: $dark-gray-color;
+        &.operation {
+          color: $light-gray-color;
+        }
       }
     }
   }

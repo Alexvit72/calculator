@@ -16,51 +16,90 @@ export function formatResult(string, fraction, limit) {
   }
 }
 
-export const calculatorButtons = [
-  { sign: 'C', type: 'delete', value: 'c' },
-  { sign: '&#8676;', type: 'delete', value: 'back' },
-  { sign: '&#37;', type: 'operation', value: '%' },
-  { sign: '&#247;', type: 'operation', value: '/' },
+export const buttons = {
+  calculator: [
+    { sign: 'C', type: 'delete', value: 'c' },
+    { sign: '&#8676;', type: 'delete', value: 'back' },
+    { sign: '&#37;', type: 'operation', value: '%' },
+    { sign: '&#247;', type: 'operation', value: '/' },
 
-  { sign: '7', type: 'number', value: '7' },
-  { sign: '8', type: 'number', value: '8' },
-  { sign: '9', type: 'number', value: '9' },
-  { sign: '&#215;', type: 'operation', value: '*' },
+    { sign: '7', type: 'number', value: '7' },
+    { sign: '8', type: 'number', value: '8' },
+    { sign: '9', type: 'number', value: '9' },
+    { sign: '&#215;', type: 'operation', value: '*' },
 
-  { sign: '4', type: 'number', value: '4' },
-  { sign: '5', type: 'number', value: '5' },
-  { sign: '6', type: 'number', value: '6' },
-  { sign: '&#8722;', type: 'operation', value: '-' },
+    { sign: '4', type: 'number', value: '4' },
+    { sign: '5', type: 'number', value: '5' },
+    { sign: '6', type: 'number', value: '6' },
+    { sign: '&#8722;', type: 'operation', value: '-' },
 
-  { sign: '1', type: 'number', value: '1' },
-  { sign: '2', type: 'number', value: '2' },
-  { sign: '3', type: 'number', value: '3' },
-  { sign: '&#43;', type: 'operation', value: '+' },
+    { sign: '1', type: 'number', value: '1' },
+    { sign: '2', type: 'number', value: '2' },
+    { sign: '3', type: 'number', value: '3' },
+    { sign: '&#43;', type: 'operation', value: '+' },
 
-  { sign: '&#40;&#41;', type: 'number', value: '()' },
-  { sign: '0', type: 'number', value: '0' },
-  { sign: '&#183;', type: 'number', value: '.' },
-  { sign: '&#61;', type: 'operation', value: '=' }
-];
+    { sign: '&#40;&#41;', type: 'number', value: '()' },
+    { sign: '0', type: 'number', value: '0' },
+    { sign: '&#183;', type: 'number', value: '.' },
+    { sign: '&#61;', type: 'operation', value: '=' }
+  ],
+  converter: [
+    { sign: '7', type: 'number', value: '7' },
+    { sign: '8', type: 'number', value: '8' },
+    { sign: '9', type: 'number', value: '9' },
+    { sign: '&#8676;', type: 'delete', value: 'back' },
 
-export const converterButtons = [
-  { sign: '7', type: 'number', value: '7' },
-  { sign: '8', type: 'number', value: '8' },
-  { sign: '9', type: 'number', value: '9' },
-  { sign: '&#8676;', type: 'delete', value: 'back' },
+    { sign: '4', type: 'number', value: '4' },
+    { sign: '5', type: 'number', value: '5' },
+    { sign: '6', type: 'number', value: '6' },
+    { sign: 'C', type: 'delete', value: 'c' },
 
-  { sign: '4', type: 'number', value: '4' },
-  { sign: '5', type: 'number', value: '5' },
-  { sign: '6', type: 'number', value: '6' },
-  { sign: 'C', type: 'delete', value: 'c' },
+    { sign: '1', type: 'number', value: '1' },
+    { sign: '2', type: 'number', value: '2' },
+    { sign: '3', type: 'number', value: '3' },
+    { sign: '&#8593;', type: 'operation', value: 'up' },
 
-  { sign: '1', type: 'number', value: '1' },
-  { sign: '2', type: 'number', value: '2' },
-  { sign: '3', type: 'number', value: '3' },
-  { sign: '&#8593;', type: 'operation', value: 'up' },
+    { sign: '&plus;&sol;&minus;', type: 'number', value: 'negate' },
+    { sign: '0', type: 'number', value: '0' },
+    { sign: '&#183;', type: 'number', value: '.' },
+    { sign: '&#8595;', type: 'operation', value: 'down' }
+  ]
+}
 
-  { sign: '&plus;&sol;&minus;', type: 'number', value: 'negate' },
-  { sign: '0', type: 'number', value: '0' },
-  { sign: '&#183;', type: 'number', value: '.' },
-  { sign: '&#8595;', type: 'operation', value: 'down' }
-];
+export const bases = {
+  Area: [
+    { name: 'Квадратные метры', symbol: 'm2' },
+    { name: 'Квадратные дюймы', symbol: 'sqin' },
+    { name: 'Квадратные футы', symbol: 'sqft' },
+    { name: 'Акры', symbol: 'acre' },
+    { name: 'Гектары', symbol: 'hectare' },
+  ],
+  Length: [
+    { name: 'Метры', symbol: 'm' },
+    { name: 'Дюймы', symbol: 'in' },
+    { name: 'Футы', symbol: 'ft' },
+    { name: 'Ярды', symbol: 'yd' },
+    { name: 'Мили', symbol: 'mi' },
+  ],
+  Volume: [
+    { name: 'Кубические метры', symbol: 'm3' },
+    { name: 'Кубические дюймы', symbol: 'cuin' },
+    { name: 'Кубические футы', symbol: 'cuft' },
+    { name: 'Кубические ярды', symbol: 'cuyd' },
+    { name: 'Литры', symbol: 'liter' },
+    { name: 'Галлоны', symbol: 'gal' },
+    { name: 'Баррели', symbol: 'obl' },
+  ],
+  Temperature: [
+    { name: 'Кельвины', symbol: 'K' },
+    { name: 'Градусы Цельсия', symbol: 'degC' },
+    { name: 'Градусы Фаренгейта', symbol: 'degF' },
+  ],
+  Mass: [
+    { name: 'Граммы', symbol: 'g' },
+    { name: 'Килограммы', symbol: 'kg' },
+    { name: 'Тонны', symbol: 'tonne' },
+    { name: 'Унции', symbol: 'oz' },
+    { name: 'Фунты', symbol: 'lbm' },
+  ],
+}

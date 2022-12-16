@@ -30,34 +30,28 @@
         {{ result }}
       </div>
     </div>
-    <div class="control">
-      <button
-        v-for="button in buttons" :key="button.sign"
-        v-html="button.sign"
-        :class="`control_button ${button.type} ${isDark ? 'dark' : ''}`"
-        @click="onPressKey(button.value)"
-      >
-      </button>
-    </div>
-    <div v-if="!!message" class="message">
-      {{ message }}
-    </div>
+    <ControlPad :isDark="isDark" tool="calculator" :onClick="onPressKey" />
+    <Message v-if="!!message" :message="message" />
   </div>
 </template>
 
 <script>
 import { evaluate } from 'mathjs';
 import { formatResult } from '../utils';
-import { calculatorButtons } from '../utils';
+import ControlPad from './ControlPad.vue';
+import Message from './Message.vue';
 
 export default {
   name: 'Calculator',
   props: {
     isDark: Boolean
   },
+  components: {
+    ControlPad,
+    Message
+  },
   data() {
     return {
-      buttons: calculatorButtons,
       result: '',
       history: [],
       expression: '',
@@ -250,54 +244,6 @@ export default {
       font-size: 2.8rem;
       line-height: 0.63;
     }
-  }
-  .control {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-gap: 1rem;
-    place-items: center;
-    &_button {
-      width: calc((400px - 5.5rem) / 4);
-      height: calc((400px - 5.5rem) / 4);
-      border: none;
-      border-radius: 50%;
-      background: none;
-      font-size: 2rem;
-      color: $default-color;
-      cursor: pointer;
-      @media (max-width: 400px) {
-        width: calc((100vw - 5.5rem) / 4);
-        height: calc((100vw - 5.5rem) / 4);
-      }
-      @media (max-height: 650px) {
-        width: calc((90vw - 5.5rem) / 4);
-        height: calc((90vw - 5.5rem) / 4);
-      }
-      &.operation {
-        color: $primary-color;
-        &.dark {
-          background: #fff;
-        }
-      }
-      &.delete {
-        color: $dark-gray-color;
-        &.dark {
-          color: #fff;
-          background: $default-color;
-        }
-      }
-    }
-  }
-  .message {
-    position: absolute;
-    bottom: 20%;
-    left: 0;
-    right: 0;
-    background: $default-color;
-    color: #fff;
-    text-align: center;
-    padding: 1rem;
-    border-radius: 10px;
   }
 }
 </style>
