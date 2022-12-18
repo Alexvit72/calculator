@@ -136,11 +136,11 @@ export default {
           this.result = formatResult(evaluate(expression).toString(), 2, 8);
           this.message = '';
         }
-        catch(error) {
+        catch {
           this.result = '';
           this.lastBracket = null;
           this.message = 'Некорректное выражение';
-          setTimeout(() => {this.message = ''}, 1300);
+          setTimeout(() => { this.message = '' }, 1300);
         }
       }
     },

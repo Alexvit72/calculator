@@ -69,10 +69,10 @@ export const buttons = {
 export const bases = {
   Area: [
     { name: 'Квадратные метры', symbol: 'm2' },
+    { name: 'Гектары', symbol: 'hectare' },
+    { name: 'Акры', symbol: 'acre' },
     { name: 'Квадратные дюймы', symbol: 'sqin' },
     { name: 'Квадратные футы', symbol: 'sqft' },
-    { name: 'Акры', symbol: 'acre' },
-    { name: 'Гектары', symbol: 'hectare' },
   ],
   Length: [
     { name: 'Метры', symbol: 'm' },

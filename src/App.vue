@@ -21,8 +21,8 @@
       </button>
     </div>
     <div class="main">
-      <Calculator v-show="tool === 'calculator'" :isDark="isDark" />
-      <Converter v-show="tool === 'converter'" :isDark="isDark" />
+      <Calculator v-if="tool === 'calculator'" :isDark="isDark" />
+      <Converter v-if="tool === 'converter'" :isDark="isDark" />
     </div>
   </div>
 </template>
