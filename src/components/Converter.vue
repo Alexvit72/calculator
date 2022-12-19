@@ -9,34 +9,24 @@
         {{ item }}
       </button>
     </div>
-    <div class="input-block">
-      <select v-model="unitOne" class="input-block_select" @change="setFocus">
-        <option v-for="unit in units" :key="unit.symbol" :value="unit.symbol">
-          {{ unit.name }}
-        </option>
-      </select>
-      <input
-        type="text"
-        ref="up"
-        :value="valueOne"
-        @input="changeValue($event.target.value)"
-        @focus="onFocus('up', 'down')"
-      />
-    </div>
-    <div class="input-block">
-      <select v-model="unitTwo" class="input-block_select" @change="setFocus">
-        <option v-for="unit in units" :key="unit.symbol" :value="unit.symbol">
-          {{ unit.name }}
-        </option>
-      </select>
-      <input
-        type="text"
-        ref="down"
-        :value="valueTwo"
-        @input="changeValue($event.target.value)"
-        @focus="onFocus('down' ,'up')"
-      />
-    </div>
+    <InputBlock
+      ref="up"
+      :units="units"
+      :onFocus="() => onFocus('up', 'down')"
+      v-model:unit="unitOne"
+      @update:unit="setFocus"
+      v-model:value="valueOne"
+      @update:value="changeValue"
+    />
+    <InputBlock
+      ref="down"
+      :units="units"
+      :onFocus="() => onFocus('down', 'up')"
+      v-model:unit="unitTwo"
+      @update:unit="setFocus"
+      v-model:value="valueTwo"
+      @update:value="changeValue"
+    />
     <ControlPad
       :isDark="isDark"
       tool='converter'
@@ -51,6 +41,7 @@
 import { evaluate } from 'mathjs';
 import ControlPad from './ControlPad.vue';
 import Message from './Message.vue';
+import InputBlock from './InputBlock.vue';
 import { bases } from '../utils';
 
 const blocks = {
@@ -65,7 +56,8 @@ export default {
   },
   components: {
     ControlPad,
-    Message
+    Message,
+    InputBlock
   },
   data() {
     return {
@@ -73,7 +65,7 @@ export default {
       disabledButtons: ['negate', 'up'],
       unitOne: '',
       unitTwo: '',
-      valueOne: '',
+      valueOne: '1',
       valueTwo: '',
       message: '',
       currentFocus: 'up'
@@ -99,6 +91,10 @@ export default {
   mounted() {
     this.changeBase(Object.keys(bases)[0]);
     this.setFocus();
+    document.addEventListener('click', this.outClickHandler);
+  },
+  unmounted() {
+    document.removeEventListener('click', this.outClickHandler);
   },
   methods: {
     changeBase(base) {
@@ -112,7 +108,6 @@ export default {
         this.disabledButtons.splice(this.disabledButtons.indexOf('negate'), 1);
       }
       this.currentFocus = 'up';
-      this.setFocus();
     },
 
     clearInputs() {
@@ -156,17 +151,22 @@ export default {
         this.setMessage('Нельзя ввести больше 20 знаков');
       } else {
         this.convert(this[this.currentBlock.value], this[this.currentBlock.unit], this[this.targetBlock.unit]);
-        this.setFocus();
       }
     },
 
     setFocus() {
-      this.$refs[this.currentFocus].focus();
+      this.$refs[this.currentFocus].focusInput();
+    },
+
+    outClickHandler(e) {
+      if (!e.target.closest('.input-block_select')) {
+        this.setFocus();
+      }
     },
 
     convert(value, sourceUnit, targetUnit) {
       try {
-        this[this.targetBlock.value] = value ? evaluate(`number(${value} ${sourceUnit}, ${targetUnit})`) : '';
+        this[this.targetBlock.value] = value ? evaluate(`number(${value} ${sourceUnit}, ${targetUnit})`).toString() : '';
         this.message = '';
       }
       catch {
@@ -222,36 +222,6 @@ export default {
       }
     }
   }
-  .input-block {
-    flex-grow: 1;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid $light-gray-color;
-    margin-bottom: 1rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: flex-start;
-    input {
-      text-align: right;
-      width: 100%;
-      font-size: 1.5rem;
-      caret-color: $primary-color;
-    }
-    select, input, select:focus, select:hover, input:focus, input:hover {
-      border: none;
-      outline: none;
-    }
-    select, input {
-      background: none;
-      color: $default-color;
-    }
-    option {
-      background: $dark-background-color;
-      &:hover {
-        background: $primary-color;
-      }
-    }
-  }
 }
 .dark {
   .converter {
@@ -262,12 +232,6 @@ export default {
         &.active {
           border-color: $light-gray-color;
         }
-      }
-    }
-    .input-block {
-      border-color: $dark-gray-color;
-      select, input {
-        color: $light-gray-color;
       }
     }
   }

@@ -1,5 +1,5 @@
 <template>
-  <div :class="`bg ${isDark ? 'dark' : ''}`">
+  <div :class="`my_calculator_bg ${isDark ? 'dark' : ''}`">
     <div class="menu">
       <div class="menu_tool">
         <button
@@ -64,6 +64,9 @@ body {
   &::-webkit-scrollbar {
     width: 0;
   }
+  &:hover, &:focus, :active {
+    background: none;
+  }
 }
 
 #app {
@@ -77,7 +80,7 @@ body {
   @media (max-width: 600px) {
     display: block;
   }
-  .bg {
+  .my_calculator_bg {
     display: flex;
     flex-direction: column;
     background: #fff;

@@ -1,16 +1,16 @@
 <template>
   <div class="input-block">
-    <select v-model="unit" class="input-block_select" @change="setFocus">
+    <select :value="unit" class="input-block_select" @change="$emit('update:unit', $event.target.value)">
       <option v-for="unit in units" :key="unit.symbol" :value="unit.symbol">
         {{ unit.name }}
       </option>
     </select>
     <input
       type="text"
-      ref="up"
+      ref="input"
       :value="value"
-      @input="changeValue"
-      @focus="onFocus('up', 'down')"
+      @input="$emit('update:value', $event.target.value)"
+      @focus="onFocus"
     />
   </div>
 </template>
@@ -19,15 +19,16 @@
 export default {
   name: 'InputBlock',
   props: {
-    isDark: Boolean
+    unit: String,
+    value: String,
+    units: Array,
+    onFocus: Function
   },
-  data() {
-    return {
-    }
-  },
-  computed: {
-  },
+  emits: [ 'update:unit', 'update:value' ],
   methods: {
+    focusInput() {
+      this.$refs.input.focus();
+    }
   }
 }
 </script>
@@ -55,6 +56,17 @@ export default {
   select, input {
     background: none;
     color: $default-color;
+  }
+}
+.dark {
+  .input-block {
+    border-color: $dark-gray-color;
+    select, input {
+      color: $light-gray-color;
+    }
+    option {
+      background: $dark-background-color;
+    }
   }
 }
 </style>
