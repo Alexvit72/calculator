@@ -19,7 +19,7 @@ export function formatResult(string, fraction, limit) {
 export const buttons = {
   calculator: [
     { sign: 'C', type: 'delete', value: 'c' },
-    { sign: '&#8676;', type: 'delete', value: 'back' },
+    { sign: '&lt;', type: 'delete', value: 'back' },
     { sign: '&#37;', type: 'operation', value: '%' },
     { sign: '&#247;', type: 'operation', value: '/' },
 
@@ -47,7 +47,7 @@ export const buttons = {
     { sign: '7', type: 'number', value: '7' },
     { sign: '8', type: 'number', value: '8' },
     { sign: '9', type: 'number', value: '9' },
-    { sign: '&#8676;', type: 'delete', value: 'back' },
+    { sign: '&lt;', type: 'delete', value: 'back' },
 
     { sign: '4', type: 'number', value: '4' },
     { sign: '5', type: 'number', value: '5' },
@@ -67,21 +67,21 @@ export const buttons = {
 }
 
 export const bases = {
-  Area: [
+  Площадь: [
     { name: 'Квадратные метры', symbol: 'm2' },
     { name: 'Гектары', symbol: 'hectare' },
     { name: 'Акры', symbol: 'acre' },
     { name: 'Квадратные дюймы', symbol: 'sqin' },
     { name: 'Квадратные футы', symbol: 'sqft' },
   ],
-  Length: [
+  Длина: [
     { name: 'Метры', symbol: 'm' },
     { name: 'Дюймы', symbol: 'in' },
     { name: 'Футы', symbol: 'ft' },
     { name: 'Ярды', symbol: 'yd' },
     { name: 'Мили', symbol: 'mi' },
   ],
-  Volume: [
+  Объём: [
     { name: 'Кубические метры', symbol: 'm3' },
     { name: 'Кубические дюймы', symbol: 'cuin' },
     { name: 'Кубические футы', symbol: 'cuft' },
@@ -90,12 +90,12 @@ export const bases = {
     { name: 'Галлоны', symbol: 'gal' },
     { name: 'Баррели', symbol: 'obl' },
   ],
-  Temperature: [
+  Температура: [
     { name: 'Кельвины', symbol: 'K' },
     { name: 'Градусы Цельсия', symbol: 'degC' },
     { name: 'Градусы Фаренгейта', symbol: 'degF' },
   ],
-  Mass: [
+  Масса: [
     { name: 'Граммы', symbol: 'g' },
     { name: 'Килограммы', symbol: 'kg' },
     { name: 'Тонны', symbol: 'tonne' },

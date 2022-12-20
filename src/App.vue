@@ -6,13 +6,13 @@
           :class="tool === 'calculator' ? 'active' : ''"
           @click="changeTool('calculator')"
         >
-          Calculator
+          Калькулятор
         </button>
         <button
           :class="tool === 'converter' ? 'active' : ''"
           @click="changeTool('converter')"
         >
-          Converter
+          Конвертер
         </button>
       </div>
       <button class="menu_theme" @click="isDark = !isDark">
@@ -22,7 +22,8 @@
     </div>
     <div class="main">
       <Calculator v-if="tool === 'calculator'" :isDark="isDark" />
-      <Converter v-if="tool === 'converter'" :isDark="isDark" />
+      <Converter v-if="tool === 'converter'" :isDark="isDark" :setMessage="setMessage" />
+      <Message v-if="!!message" :message="message" />
     </div>
   </div>
 </template>
@@ -30,23 +31,33 @@
 <script>
 import Calculator from './components/Calculator.vue';
 import Converter from './components/Converter.vue';
+import Message from './components/Message.vue';
 
 export default {
   name: 'App',
   components: {
     Calculator,
-    Converter
+    Converter,
+    Message
   },
   data() {
     return {
       isDark: false,
-      tool: 'calculator'
+      tool: 'calculator',
+      message: ''
     };
   },
   methods: {
     changeTool(tool) {
       this.tool = tool;
-    }
+    },
+    setMessage(message) {
+      this.message = message;
+      setTimeout(() => {
+        this.message = '';
+      }, 1300);
+    },
+
   }
 }
 </script>
@@ -84,18 +95,16 @@ body {
     display: flex;
     flex-direction: column;
     background: #fff;
-    width: 100%;
-    height: 100%;
-    max-width: 400px;
-    max-height: 800px;
+    width: 400px;
+    height: 800px;
     padding: 0 1.25rem 2rem;
     border-radius: 20px;
     @media (max-width: 600px) {
-      max-width: 100vw;
-      max-height: 100vh;
+      width: 100vw;
+      height: 100vh;
       border-radius: 0;
     }
-    @media (max-height: 650px) {
+    @media screen and (min-device-aspect-ratio: 5/9) {
       padding-bottom: 1.5rem;
     }
     .menu {
@@ -103,7 +112,7 @@ body {
       justify-content: space-between;
       width: 100%;
       margin: 2rem 0 1rem;
-      @media (max-height: 650px) {
+      @media screen and (min-device-aspect-ratio: 5/9) {
         margin: 1.5rem 0 .8rem;
       }
       &_tool {
@@ -116,7 +125,7 @@ body {
           font-weight: 700;
           border: none;
           border-radius: 1.25rem;
-          @media (max-height: 650px) {
+          @media screen and (min-device-aspect-ratio: 5/9) {
             font-size: .8rem;
             padding: .3rem 0.6rem;
           }
@@ -132,7 +141,7 @@ body {
         background: none;
         margin-left: 1rem;
         padding-top: 5px;
-        @media (max-height: 650px) {
+        @media screen and (min-device-aspect-ratio: 5/9) {
           padding-top: 0;
         }
       }

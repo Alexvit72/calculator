@@ -180,14 +180,14 @@ export default {
     @media (max-width: 600px) {
       height: calc(100vh - ((100vw - 5.5rem) / 4 * 5 + 4rem) - 7rem);
     }
-    @media (max-height: 650px) {
+    @media screen and (min-device-aspect-ratio: 5/9) {
       height: calc(100vh - ((100vw - 5.5rem) / 4 * 5 + 4rem) - 4rem);
     }
     &_content {
       width: 100%;
       max-height: calc(100% - 1.5rem);
       overflow-y: auto;
-      @media (max-height: 650px) {
+      @media screen and (min-device-aspect-ratio: 5/9) {
         font-size: .8rem;
       }
       p {
@@ -212,7 +212,7 @@ export default {
         @media (max-width: 600px) {
           height: calc(100vh - ((100vw - 5.5rem) / 4 * 5 + 4rem) - 13rem);
         }
-        @media (max-height: 650px) {
+        @media screen and (min-device-aspect-ratio: 5/9) {
           height: calc(100vh - ((100vw - 5.5rem) / 4 * 5 + 4rem) - 7rem);
         }
         p {
@@ -231,7 +231,7 @@ export default {
       @media (max-width: 600px) {
         font-size: 4rem;
       }
-      @media (max-height: 650px) {
+      @media screen and (min-device-aspect-ratio: 5/9) {
         margin-bottom: .5rem;
         font-size: 3rem;
       }

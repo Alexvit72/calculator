@@ -5,13 +5,10 @@
         {{ unit.name }}
       </option>
     </select>
-    <input
-      type="text"
-      ref="input"
-      :value="value"
-      @input="$emit('update:value', $event.target.value)"
-      @focus="onFocus"
-    />
+    <div class="value">
+      <p v-show="isFocused">Введите значение:</p>
+      <p :class="`text ${isFocused ? 'focused' : ''}`">{{ value }}</p>
+    </div>
   </div>
 </template>
 
@@ -22,14 +19,9 @@ export default {
     unit: String,
     value: String,
     units: Array,
-    onFocus: Function
+    isFocused: Boolean
   },
-  emits: [ 'update:unit', 'update:value' ],
-  methods: {
-    focusInput() {
-      this.$refs.input.focus();
-    }
-  }
+  emits: [ 'update:unit' ]
 }
 </script>
 
@@ -43,19 +35,35 @@ export default {
   flex-direction: column;
   justify-content: space-between;
   align-items: flex-start;
-  input {
-    text-align: right;
+  .value {
     width: 100%;
-    font-size: 1.5rem;
-    caret-color: $primary-color;
+    font-size: .8rem;
+    @media screen and (min-device-aspect-ratio: 5/9) {
+      font-size: .6rem;
+    }
+    .text {
+      height: 30px;
+      margin-top: .5rem;
+      padding: 0 5px;
+      font-size: 1.5rem;
+      border: 1px solid $dark-background-color;
+      border-radius: 4px;
+      &.focused {
+        border-color: $primary-color;
+      }
+    }
   }
-  select, input, select:focus, select:hover, input:focus, input:hover {
+  select, select:focus, select:hover {
     border: none;
     outline: none;
   }
-  select, input {
+  select {
     background: none;
+    font-size: 1rem;
     color: $default-color;
+    @media screen and (min-device-aspect-ratio: 5/9) {
+      font-size: .8rem;
+    }
   }
 }
 .dark {

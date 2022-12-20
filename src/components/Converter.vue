@@ -12,20 +12,18 @@
     <InputBlock
       ref="up"
       :units="units"
-      :onFocus="() => onFocus('up', 'down')"
-      v-model:unit="unitOne"
-      @update:unit="setFocus"
-      v-model:value="valueOne"
-      @update:value="changeValue"
+      :isFocused="this.currentFocus === 'up'"
+      v-model:unit="blocks.up.unit"
+      @update:unit="convert"
+      :value="blocks.up.value"
     />
     <InputBlock
       ref="down"
       :units="units"
-      :onFocus="() => onFocus('down', 'up')"
-      v-model:unit="unitTwo"
-      @update:unit="setFocus"
-      v-model:value="valueTwo"
-      @update:value="changeValue"
+      :isFocused="this.currentFocus === 'down'"
+      v-model:unit="blocks.down.unit"
+      @update:unit="convert"
+      :value="blocks.down.value"
     />
     <ControlPad
       :isDark="isDark"
@@ -33,41 +31,32 @@
       :disabledButtons="disabledButtons"
       :onClick="onPressKey"
     />
-    <Message v-if="!!message" :message="message" />
   </div>
 </template>
 
 <script>
 import { evaluate } from 'mathjs';
 import ControlPad from './ControlPad.vue';
-import Message from './Message.vue';
 import InputBlock from './InputBlock.vue';
 import { bases } from '../utils';
-
-const blocks = {
-  up: { value: 'valueOne', unit: 'unitOne' },
-  down: { value: 'valueTwo', unit: 'unitTwo' }
-};
 
 export default {
   name: 'Converter',
   props: {
-    isDark: Boolean
+    isDark: Boolean,
+    setMessage: Function
   },
   components: {
     ControlPad,
-    Message,
     InputBlock
   },
   data() {
     return {
       currentBase: '',
-      disabledButtons: ['negate', 'up'],
-      unitOne: '',
-      unitTwo: '',
-      valueOne: '1',
-      valueTwo: '',
-      message: '',
+      blocks: {
+        up: { value: '', unit: '' },
+        down: { value: '', unit: '' }
+      },
       currentFocus: 'up'
     }
   },
@@ -79,114 +68,77 @@ export default {
       return bases[this.currentBase] || [];
     },
     currentBlock() {
-      return blocks[this.currentFocus];
+      return this.blocks[this.currentFocus];
     },
     targetBlock() {
-      return blocks[Object.keys(blocks).filter((key) => key !== this.currentFocus)];
+      return this.blocks[Object.keys(this.blocks).filter((key) => key !== this.currentFocus)];
+    },
+    disabledButtons() {
+      let arr = [];
+      if (this.currentBase !== 'Температура') {
+        arr.push('negate');
+      }
+      arr.push(this.currentFocus);
+      return arr;
     }
-  },
-  watch: {
-    isDark: 'setFocus'
   },
   mounted() {
     this.changeBase(Object.keys(bases)[0]);
-    this.setFocus();
-    document.addEventListener('click', this.outClickHandler);
-  },
-  unmounted() {
-    document.removeEventListener('click', this.outClickHandler);
+    document.addEventListener('keydown', (e) => this.onPressKey(e.key));
   },
   methods: {
     changeBase(base) {
       this.currentBase = base;
-      this.unitOne = this.units[0].symbol;
-      this.unitTwo = this.units[1].symbol;
+      this.blocks.up.unit = this.units[0].symbol;
+      this.blocks.down.unit = this.units[1].symbol;
       this.clearInputs();
-      if (this.currentBase !== 'Temperature') {
-        if (!this.disabledButtons.includes('negate')) this.disabledButtons.push('negate');
-      } else {
-        this.disabledButtons.splice(this.disabledButtons.indexOf('negate'), 1);
-      }
       this.currentFocus = 'up';
     },
 
     clearInputs() {
-      this.valueOne = '';
-      this.valueTwo = '';
-    },
-
-    setMessage(message) {
-      this.message = message;
-      this.$refs[this.currentFocus].blur();
-      setTimeout(() => {
-        this.message = '';
-        this.setFocus();
-      }, 1300);
+      this.blocks.up.value = '';
+      this.blocks.down.value = '';
     },
 
     onPressKey(value) {
       if (value === 'up' || value === 'down') {
         this.currentFocus = value;
-      } else if (value === 'negate') {
-        if (this[this.currentBlock.value].startsWith('-')) {
-          this[this.currentBlock.value] = this[this.currentBlock.value].slice(1);
-        } else {
-          this[this.currentBlock.value] = '-' + this[this.currentBlock.value];
-        }
-      } else if (value === 'back') {
-        this[this.currentBlock.value] = this[this.currentBlock.value].slice(0, this[this.currentBlock.value].length - 1);
+      } else if (value === 'back' || value === 'Backspace') {
+        this.currentBlock.value = this.currentBlock.value.slice(0, this.currentBlock.value.length - 1);
       } else if (value === 'c') {
         this.clearInputs();
-      } else if (value === '.') {
-        if (this[this.currentBlock.value]) {
-          this[this.currentBlock.value] += value;
+      } else if (value === 'negate') {
+        if (this.currentBlock.value.startsWith('-')) {
+          this.currentBlock.value = this.currentBlock.value.slice(1);
         } else {
-          this[this.currentBlock.value] = '0.';
+          this.currentBlock.value = '-' + this.currentBlock.value;
         }
       } else {
-        this[this.currentBlock.value] += value;
+        if (value === '.') {
+          if (this.currentBlock.value) {
+            this.currentBlock.value += value;
+          } else {
+            this.currentBlock.value = '0.';
+          }
+        } else {
+          this.currentBlock.value += value;
+        }
+        if (this.currentBlock.value.length > 20) {
+          this.currentBlock.value = this.currentBlock.value.slice(0, this.currentBlock.value.length - 1);
+          this.setMessage('Нельзя ввести больше 20 знаков');
+        }
       }
-      if (this[this.currentBlock.value].length > 20) {
-        this[this.currentBlock.value] = this[this.currentBlock.value].slice(0, this[this.currentBlock.value].length - 1);
-        this.setMessage('Нельзя ввести больше 20 знаков');
-      } else {
-        this.convert(this[this.currentBlock.value], this[this.currentBlock.unit], this[this.targetBlock.unit]);
-      }
+      this.convert();
     },
 
-    setFocus() {
-      this.$refs[this.currentFocus].focusInput();
-    },
-
-    outClickHandler(e) {
-      if (!e.target.closest('.input-block_select')) {
-        this.setFocus();
-      }
-    },
-
-    convert(value, sourceUnit, targetUnit) {
+    convert() {
       try {
-        this[this.targetBlock.value] = value ? evaluate(`number(${value} ${sourceUnit}, ${targetUnit})`).toString() : '';
+        this.targetBlock.value = this.currentBlock.value ? evaluate(`number(${this.currentBlock.value} ${this.currentBlock.unit}, ${this.targetBlock.unit})`).toString() : '';
         this.message = '';
       }
       catch {
         this.setMessage('Некорректное выражение');
       }
-    },
-
-    changeValue(value) {
-      if (value.length > 20) {
-        this.setMessage('Нельзя ввести больше 20 знаков');
-      } else {
-        this[this.currentBlock.value] = value;
-        this.convert(this[this.currentBlock.value], this[this.currentBlock.unit], this[this.targetBlock.unit]);
-      }
-    },
-
-    onFocus(value, alternateValue) {
-      this.currentFocus = value;
-      this.disabledButtons.push(value);
-      this.disabledButtons.splice(this.disabledButtons.indexOf(alternateValue), 1);
     }
   }
 }
@@ -213,7 +165,7 @@ export default {
       color: $default-color;
       border: 1px solid rgba(0,0,0,0);
       border-radius: 1.25rem;
-      @media (max-height: 650px) {
+      @media screen and (min-device-aspect-ratio: 5/9) {
         font-size: .8rem;
         padding: .3rem 0.6rem;
       }
