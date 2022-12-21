@@ -1,32 +1,33 @@
 <template>
-  <div class="calculator">
-    <div v-show="showedHistory" class="history">
-      <div class="action close" @click="closeHistory">
+  <div class="calculator flex flex-col justify-between h-full">
+    <div v-show="showedHistory" class="history flex items-start h-56">
+      <div class="cursor-pointer my-0 mx-2 text-4xl leading-5 dark:text-gray-400" @click="closeHistory">
         &#215;
       </div>
-      <div v-show="!!history.length" class="action" @click="clearHistory">
+      <div v-show="!!history.length" class="cursor-pointer my-1 mx-2" @click="clearHistory">
         <img src="../assets/icons/delete.svg" alt="">
       </div>
-      <div class="history_content">
+      <div class="history_content w-full overflow-y-auto">
         <p
           v-for="item in history"
           :key="item"
+          class="mt-2 cursor-pointer"
           @click="onClickHistoryItem(item)"
         >
           {{ item }}
         </p>
       </div>
     </div>
-    <div v-show="!showedHistory" class="current">
-      <div class="current_data">
-        <div class="action" @click="showHistory">
+    <div v-show="!showedHistory" class="current flex flex-col flex-grow justify-between">
+      <div class="current_data flex">
+        <div class="cursor-pointer my-0 mx-2" @click="showHistory">
           <img src="../assets/icons/clock.svg" alt="">
         </div>
-        <div class="expression">
-          <p>{{ expression }}</p>
+        <div class="expression flex flex-col justify-end w-full sm:h-32">
+          <p class="max-h-full overflow-y-auto">{{ expression }}</p>
         </div>
       </div>
-      <div class="current_result">
+      <div class="current_result flex justify-end mb-4 text-green-600 overflow-hidden text-6xl sm:text-7xl">
         {{ result }}
       </div>
     </div>
@@ -169,80 +170,34 @@ export default {
 
 <style lang="scss">
 .calculator {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  height: 100%;
   .history {
-    height: 230px;
-    display: flex;
-    align-items: flex-start;
+    &_content {
+      max-height: calc(100% - 1.5rem);
+    }
     @media (max-width: 600px) {
       height: calc(100vh - ((100vw - 5.5rem) / 4 * 5 + 4rem) - 7rem);
-    }
-    @media screen and (min-device-aspect-ratio: 5/9) {
-      height: calc(100vh - ((100vw - 5.5rem) / 4 * 5 + 4rem) - 4rem);
-    }
-    &_content {
-      width: 100%;
-      max-height: calc(100% - 1.5rem);
-      overflow-y: auto;
       @media screen and (min-device-aspect-ratio: 5/9) {
-        font-size: .8rem;
-      }
-      p {
-        margin-top: .5rem;
-        cursor: pointer;
+        height: calc(100vh - ((100vw - 5.5rem) / 4 * 5 + 4rem) - 4rem);
+        &_content {
+          font-size: .8rem;
+        }
       }
     }
   }
   .current {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
     &_data {
-      display: flex;
       .expression {
-        width: 100%;
-        height: 120px;
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-end;
         @media (max-width: 600px) {
           height: calc(100vh - ((100vw - 5.5rem) / 4 * 5 + 4rem) - 13rem);
-        }
-        @media screen and (min-device-aspect-ratio: 5/9) {
-          height: calc(100vh - ((100vw - 5.5rem) / 4 * 5 + 4rem) - 7rem);
-        }
-        p {
-          max-height: 100%;
-          overflow-y: auto;
+          @media screen and (min-device-aspect-ratio: 5/9) {
+            height: calc(100vh - ((100vw - 5.5rem) / 4 * 5 + 4rem) - 7rem);
+            &_result {
+              margin-bottom: .5rem;
+              font-size: 3rem;
+            }
+          }
         }
       }
-    }
-    &_result {
-      display: flex;
-      justify-content: flex-end;
-      margin-bottom: 1rem;
-      font-size: 5rem;
-      color: $primary-color;
-      overflow: hidden;
-      @media (max-width: 600px) {
-        font-size: 4rem;
-      }
-      @media screen and (min-device-aspect-ratio: 5/9) {
-        margin-bottom: .5rem;
-        font-size: 3rem;
-      }
-    }
-  }
-  .action {
-    cursor: pointer;
-    margin: 0 .5rem;
-    &.close {
-      font-size: 2.8rem;
-      line-height: 0.63;
     }
   }
 }

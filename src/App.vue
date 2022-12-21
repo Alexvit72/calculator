@@ -1,29 +1,31 @@
 <template>
-  <div :class="`my_calculator_bg ${isDark ? 'dark' : ''}`">
-    <div class="menu">
-      <div class="menu_tool">
-        <button
-          :class="tool === 'calculator' ? 'active' : ''"
-          @click="changeTool('calculator')"
-        >
-          Калькулятор
-        </button>
-        <button
-          :class="tool === 'converter' ? 'active' : ''"
-          @click="changeTool('converter')"
-        >
-          Конвертер
+  <div :class="`my_calculator_bg ${isDark ? 'dark' : ''} w-screen h-screen`">
+    <div class="flex flex-col w-full h-full sm:rounded-3xl bg-white dark:bg-gray-800 pt-0 px-5 pb-8">
+      <div class="menu flex justify-between w-full mt-8 mx-0 mb-4">
+        <div class="menu_tool">
+          <button
+            :class="`${tool === 'calculator' ? 'bg-green-600 dark:bg-white text-white dark:text-green-600' : 'text-gray-400 bg-opacity-0'} mx-2 my-0 py-1 px-2.5 text-xs font-bold rounded-2xl border-0`"
+            @click="changeTool('calculator')"
+          >
+            Калькулятор
+          </button>
+          <button
+            :class="`${tool === 'converter' ? 'bg-green-600 text-white dark:bg-white dark:text-green-600' : 'text-gray-400 bg-opacity-0'} mx-2 my-0 py-1 px-2.5 text-xs font-bold rounded-2xl border-0`"
+            @click="changeTool('converter')"
+          >
+            Конвертер
+          </button>
+        </div>
+        <button class="menu_theme border-0 bg-opacity-0 ml-4 pt-1" @click="isDark = !isDark">
+          <img v-show="isDark" src="./assets/icons/sun.svg" alt="">
+          <img v-show="!isDark" src="./assets/icons/moon.svg" alt="">
         </button>
       </div>
-      <button class="menu_theme" @click="isDark = !isDark">
-        <img v-show="isDark" src="./assets/icons/sun.svg" alt="">
-        <img v-show="!isDark" src="./assets/icons/moon.svg" alt="">
-      </button>
-    </div>
-    <div class="main">
-      <Calculator v-if="tool === 'calculator'" :isDark="isDark" />
-      <Converter v-if="tool === 'converter'" :isDark="isDark" :setMessage="setMessage" />
-      <Message v-if="!!message" :message="message" />
+      <div class="main flex-grow w-full relative text-gray-400 dark:text-gray-200 text-right">
+        <Calculator v-if="tool === 'calculator'" :isDark="isDark" />
+        <Converter v-if="tool === 'converter'" :isDark="isDark" :setMessage="setMessage" />
+        <Message v-if="!!message" :message="message" />
+      </div>
     </div>
   </div>
 </template>
@@ -81,86 +83,20 @@ body {
 }
 
 #app {
-  background: $light-gray-color;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100vw;
-  height: 100vh;
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  @media (max-width: 600px) {
-    display: block;
-  }
   .my_calculator_bg {
-    display: flex;
-    flex-direction: column;
-    background: #fff;
-    width: 400px;
-    height: 800px;
-    padding: 0 1.25rem 2rem;
-    border-radius: 20px;
+    @media (min-width: 640px) {
+      width: 400px;
+      height: 800px;
+    }
     @media (max-width: 600px) {
-      width: 100vw;
-      height: 100vh;
-      border-radius: 0;
-    }
-    @media screen and (min-device-aspect-ratio: 5/9) {
-      padding-bottom: 1.5rem;
-    }
-    .menu {
-      display: flex;
-      justify-content: space-between;
-      width: 100%;
-      margin: 2rem 0 1rem;
       @media screen and (min-device-aspect-ratio: 5/9) {
-        margin: 1.5rem 0 .8rem;
-      }
-      &_tool {
-        button {
-          cursor: pointer;
-          margin: 0 .5rem;
-          padding: .5rem 0.8rem;
-          background: none;
-          color: $default-color;
-          font-weight: 700;
-          border: none;
-          border-radius: 1.25rem;
-          @media screen and (min-device-aspect-ratio: 5/9) {
-            font-size: .8rem;
-            padding: .3rem 0.6rem;
-          }
-          &.active {
-            background: $primary-color;
-            color: #fff;
+        padding-bottom: 1.5rem;
+        .menu {
+          margin: 1.5rem 0 .8rem;
+          &_theme {
+            padding-top: 0;
           }
         }
-      }
-      &_theme {
-        cursor: pointer;
-        border: none;
-        background: none;
-        margin-left: 1rem;
-        padding-top: 5px;
-        @media screen and (min-device-aspect-ratio: 5/9) {
-          padding-top: 0;
-        }
-      }
-    }
-    .main {
-      width: 100%;
-      flex-grow: 1;
-      position: relative;
-      text-align: right;
-      color: $default-color;
-    }
-    &.dark {
-      background: $dark-background-color;
-      .menu_tool .active {
-        background: #fff;
-        color: $primary-color;
-      }
-      .main {
-        color: $light-gray-color;
       }
     }
   }

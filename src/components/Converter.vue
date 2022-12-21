@@ -1,9 +1,9 @@
 <template>
-  <div class="converter">
-    <div class="converter_menu">
+  <div class="converter flex flex-col justify-between h-full">
+    <div class="converter_menu flex justify-between w-full overflow-x-auto mb-4 pb-4 border-b border-gray-200 dark:border-gray-500">
       <button
         v-for="item in menuItems" :key="item"
-        :class="`converter_menu_button ${currentBase === item ? 'active' : ''}`"
+        :class="`converter_menu_button py-1 px-2.5 bg-opacity-0 text-xs text-gray-400 border border-gray-400 border-opacity-${currentBase === item ? '100' : '0'} rounded-3xl`"
         @click="changeBase(item)"
       >
         {{ item }}
@@ -143,49 +143,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss">
-.converter {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  height: 100%;
-  &_menu {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    overflow-x: auto;
-    margin-bottom: 1rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid $light-gray-color;
-    &_button {
-      cursor: pointer;
-      padding: .5rem 0.8rem;
-      background: none;
-      color: $default-color;
-      border: 1px solid rgba(0,0,0,0);
-      border-radius: 1.25rem;
-      @media screen and (min-device-aspect-ratio: 5/9) {
-        font-size: .8rem;
-        padding: .3rem 0.6rem;
-      }
-      &.active {
-        border-color: $default-color;
-      }
-    }
-  }
-}
-.dark {
-  .converter {
-    &_menu {
-      border-color: $dark-gray-color;
-      &_button {
-        color: $light-gray-color;
-        &.active {
-          border-color: $light-gray-color;
-        }
-      }
-    }
-  }
-}
-</style>

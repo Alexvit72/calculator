@@ -46,7 +46,7 @@ export default {
       margin-top: .5rem;
       padding: 0 5px;
       font-size: 1.5rem;
-      border: 1px solid $dark-background-color;
+      border: 1px solid #fff;
       border-radius: 4px;
       &.focused {
         border-color: $primary-color;
@@ -74,6 +74,9 @@ export default {
     }
     option {
       background: $dark-background-color;
+    }
+    .text {
+      border: 1px solid $dark-background-color;
     }
   }
 }
