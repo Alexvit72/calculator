@@ -16,7 +16,7 @@
             Конвертер
           </button>
         </div>
-        <button class="menu_theme border-0 bg-opacity-0 ml-4 pt-1" @click="isDark = !isDark">
+        <button class="menu_theme border-0 bg-opacity-0 ml-4 pt-1" @click="changeDarkMode">
           <img v-show="isDark" src="./assets/icons/sun.svg" alt="">
           <img v-show="!isDark" src="./assets/icons/moon.svg" alt="">
         </button>
@@ -49,6 +49,13 @@ export default {
       message: ''
     };
   },
+  mounted() {
+    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      this.isDark = true;
+    } else {
+      this.isDark = false;
+    }
+  },
   methods: {
     changeTool(tool) {
       this.tool = tool;
@@ -59,7 +66,14 @@ export default {
         this.message = '';
       }, 1300);
     },
-
+    changeDarkMode() {
+      if (this.isDark) {
+        localStorage.theme = 'light';
+      } else {
+        localStorage.theme = 'dark';
+      }
+      this.isDark = !this.isDark;
+    }
   }
 }
 </script>
