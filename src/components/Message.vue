@@ -1,5 +1,5 @@
 <template>
-  <div class="message">
+  <div class="absolute left-0 right-0 bottom-1/4 bg-red-300 text-white text-center p-4 rounded-xl">
     {{ message }}
   </div>
 </template>
@@ -12,17 +12,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss">
-.message {
-  position: absolute;
-  bottom: 20%;
-  left: 0;
-  right: 0;
-  background: $default-color;
-  color: #fff;
-  text-align: center;
-  padding: 1rem;
-  border-radius: 10px;
-}
-</style>
