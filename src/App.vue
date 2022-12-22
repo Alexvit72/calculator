@@ -4,13 +4,13 @@
       <div class="menu flex justify-between w-full mt-8 mx-0 mb-4">
         <div class="menu_tool">
           <button
-            :class="`${tool === 'calculator' ? 'bg-green-600 dark:bg-white text-white dark:text-green-600' : 'text-gray-400 bg-opacity-0'} mx-2 my-0 py-1 px-2.5 text-xs font-bold rounded-2xl border-0`"
+            :class="`${tool === 'calculator' ? 'bg-green-600 dark:bg-white text-white dark:text-green-600' : 'text-gray-400 bg-opacity-0'} mx-2 my-0 pt-1 pb-2 px-2.5 text-xs font-bold rounded-2xl border-0`"
             @click="changeTool('calculator')"
           >
             Калькулятор
           </button>
           <button
-            :class="`${tool === 'converter' ? 'bg-green-600 text-white dark:bg-white dark:text-green-600' : 'text-gray-400 bg-opacity-0'} mx-2 my-0 py-1 px-2.5 text-xs font-bold rounded-2xl border-0`"
+            :class="`${tool === 'converter' ? 'bg-green-600 text-white dark:bg-white dark:text-green-600' : 'text-gray-400 bg-opacity-0'} mx-2 my-0 pt-1 pb-2 px-2.5 text-xs font-bold rounded-2xl border-0`"
             @click="changeTool('converter')"
           >
             Конвертер
@@ -21,9 +21,9 @@
           <img v-show="!isDark" src="./assets/icons/moon.svg" alt="">
         </button>
       </div>
-      <div class="main flex-grow w-full relative text-gray-400 dark:text-gray-200 text-right">
-        <Calculator v-if="tool === 'calculator'" :isDark="isDark" />
-        <Converter v-if="tool === 'converter'" :isDark="isDark" :setMessage="setMessage" />
+      <div class="main flex-grow w-full relative text-gray-400 text-right">
+        <Calculator v-if="tool === 'calculator'" :setMessage="setMessage" />
+        <Converter v-if="tool === 'converter'" :setMessage="setMessage" />
         <Message v-if="!!message" :message="message" />
       </div>
     </div>
@@ -65,32 +65,27 @@ export default {
 </script>
 
 <style lang="scss">
-body {
-  margin: 0;
-}
-
 * {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
   scrollbar-width: none;
   &::-webkit-scrollbar {
     width: 0;
   }
-  &:hover, &:focus, :active {
-    background: none;
+  &:focus {
+    outline: none;
   }
 }
 
 #app {
   .my_calculator_bg {
-    @media (min-width: 640px) {
+    @media (min-width: 601px) {
       width: 400px;
       height: 800px;
     }
     @media (max-width: 600px) {
       @media screen and (min-device-aspect-ratio: 5/9) {
-        padding-bottom: 1.5rem;
+        & > div {
+          padding-bottom: 1.5rem;
+        }
         .menu {
           margin: 1.5rem 0 .8rem;
           &_theme {

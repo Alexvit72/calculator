@@ -1,6 +1,6 @@
 <template>
-  <div class="converter flex flex-col justify-between h-full">
-    <div class="converter_menu flex justify-between w-full overflow-x-auto mb-4 pb-4 border-b border-gray-200 dark:border-gray-500">
+  <div class="converter flex flex-col justify-between h-full divide-y divide-gray-200 dark:divide-gray-500">
+    <div class="converter_menu flex justify-between w-full overflow-x-auto pb-4">
       <button
         v-for="item in menuItems" :key="item"
         :class="`converter_menu_button py-1 px-2.5 bg-opacity-0 text-xs text-gray-400 border border-gray-400 border-opacity-${currentBase === item ? '100' : '0'} rounded-3xl`"
@@ -25,12 +25,7 @@
       @update:unit="convert"
       :value="blocks.down.value"
     />
-    <ControlPad
-      :isDark="isDark"
-      tool='converter'
-      :disabledButtons="disabledButtons"
-      :onClick="onPressKey"
-    />
+    <ControlPad tool='converter' :disabledButtons="disabledButtons" :onClick="onPressKey" />
   </div>
 </template>
 
@@ -43,7 +38,6 @@ import { bases } from '../utils';
 export default {
   name: 'Converter',
   props: {
-    isDark: Boolean,
     setMessage: Function
   },
   components: {
@@ -134,7 +128,6 @@ export default {
     convert() {
       try {
         this.targetBlock.value = this.currentBlock.value ? evaluate(`number(${this.currentBlock.value} ${this.currentBlock.unit}, ${this.targetBlock.unit})`).toString() : '';
-        this.message = '';
       }
       catch {
         this.setMessage('Некорректное выражение');

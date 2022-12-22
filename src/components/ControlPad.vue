@@ -1,9 +1,9 @@
 <template>
-  <div class="control">
+  <div class="control grid grid-cols-4 gap-4 place-items-center pt-4">
     <button
       v-for="button in buttons" :key="button.sign"
       v-html="button.sign"
-      :class="`control_button ${button.type} ${isDark ? 'dark' : ''}`"
+      :class="`control_button bg-transparent border-0 rounded-full text-2xl xs:text-3xl sm:text-4xl disabled:text-gray-200 focus:ring-0 ${button.type === 'operation' ? 'pb-1 text-green-600 dark:bg-white dark:disabled:text-gray-200' : (button.type === 'delete' ? 'pb-1 text-gray-500 dark:text-white dark:bg-gray-400' : 'text-gray-400  dark:disabled:text-gray-500')}`"
       :disabled="getDisabled(button.value)"
       @click="() => onClick(button.value)"
     >
@@ -17,7 +17,6 @@ import { buttons } from '../utils';
 export default {
   name: 'ControlPad',
   props: {
-    isDark: Boolean,
     onClick: Function,
     tool: String,
     disabledButtons: Array
@@ -38,53 +37,16 @@ export default {
 </script>
 
 <style lang="scss">
-.control {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-gap: 1rem;
-  place-items: center;
-  &_button {
-    width: calc((400px - 5.5rem) / 4);
-    height: calc((400px - 5.5rem) / 4);
-    border: none;
-    border-radius: 50%;
-    background: none;
-    font-size: 2rem;
-    color: $default-color;
-    cursor: pointer;
-    &.dark {
-      color: $light-gray-color;
-    }
-    @media (max-width: 400px) {
-      width: calc((100vw - 5.5rem) / 4);
-      height: calc((100vw - 5.5rem) / 4);
-    }
-    @media (max-height: 650px) {
-      width: calc((90vw - 5.5rem) / 4);
-      height: calc((90vw - 5.5rem) / 4);
-    }
-    &.operation {
-      color: $primary-color;
-      &.dark {
-        background: #fff;
-      }
-    }
-    &.delete {
-      color: $dark-gray-color;
-      &.dark {
-        color: #fff;
-        background: $default-color;
-      }
-    }
-    &[disabled] {
-      color: $light-gray-color;
-      &.dark {
-        color: $dark-gray-color;
-        &.operation {
-          color: $light-gray-color;
-        }
-      }
-    }
+.control_button {
+  width: calc((400px - 5.5rem) / 4);
+  height: calc((400px - 5.5rem) / 4);
+  @media (max-width: 400px) {
+    width: calc((100vw - 5.5rem) / 4);
+    height: calc((100vw - 5.5rem) / 4);
+  }
+  @media (max-height: 650px) {
+    width: calc((90vw - 5.5rem) / 4);
+    height: calc((90vw - 5.5rem) / 4);
   }
 }
 </style>

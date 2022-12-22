@@ -1,13 +1,23 @@
 <template>
-  <div class="input-block">
-    <select :value="unit" class="input-block_select" @change="$emit('update:unit', $event.target.value)">
-      <option v-for="unit in units" :key="unit.symbol" :value="unit.symbol">
+  <div class="flex-grow flex flex-col justify-between items-start py-2 px-0 xs:pb-4">
+    <select
+      :value="unit"
+      class="bg-transparent text-sm sm:text-base text-gray-400 focus:outline-none" @change="$emit('update:unit', $event.target.value)"
+    >
+      <option
+        class="dark:bg-gray-800"
+        v-for="unit in units"
+        :key="unit.symbol"
+        :value="unit.symbol"
+      >
         {{ unit.name }}
       </option>
     </select>
-    <div class="value">
+    <div class="w-full text-xs sm:text-sm">
       <p v-show="isFocused">Введите значение:</p>
-      <p :class="`text ${isFocused ? 'focused' : ''}`">{{ value }}</p>
+      <p :class="`h-7 mt-2 px-1 text-xl leading-6 border-opacity-${isFocused ? '100' : '0'} border border-green-600 rounded`">
+        {{ value }}
+      </p>
     </div>
   </div>
 </template>
@@ -24,60 +34,3 @@ export default {
   emits: [ 'update:unit' ]
 }
 </script>
-
-<style lang="scss">
-.input-block {
-  flex-grow: 1;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid $light-gray-color;
-  margin-bottom: 1rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: flex-start;
-  .value {
-    width: 100%;
-    font-size: .8rem;
-    @media screen and (min-device-aspect-ratio: 5/9) {
-      font-size: .6rem;
-    }
-    .text {
-      height: 30px;
-      margin-top: .5rem;
-      padding: 0 5px;
-      font-size: 1.5rem;
-      border: 1px solid #fff;
-      border-radius: 4px;
-      &.focused {
-        border-color: $primary-color;
-      }
-    }
-  }
-  select, select:focus, select:hover {
-    border: none;
-    outline: none;
-  }
-  select {
-    background: none;
-    font-size: 1rem;
-    color: $default-color;
-    @media screen and (min-device-aspect-ratio: 5/9) {
-      font-size: .8rem;
-    }
-  }
-}
-.dark {
-  .input-block {
-    border-color: $dark-gray-color;
-    select, input {
-      color: $light-gray-color;
-    }
-    option {
-      background: $dark-background-color;
-    }
-    .text {
-      border: 1px solid $dark-background-color;
-    }
-  }
-}
-</style>

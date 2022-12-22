@@ -1,6 +1,6 @@
 <template>
   <div class="calculator flex flex-col justify-between h-full">
-    <div v-show="showedHistory" class="history flex items-start h-56">
+    <div v-show="showedHistory" class="history flex items-start">
       <div class="cursor-pointer my-0 mx-2 text-4xl leading-5 dark:text-gray-400" @click="closeHistory">
         &#215;
       </div>
@@ -27,12 +27,11 @@
           <p class="max-h-full overflow-y-auto">{{ expression }}</p>
         </div>
       </div>
-      <div class="current_result flex justify-end mb-4 text-green-600 overflow-hidden text-6xl sm:text-7xl">
+      <div class="current_result flex justify-end text-green-600 overflow-x-hidden text-6xl sm:text-7xl">
         {{ result }}
       </div>
     </div>
-    <ControlPad :isDark="isDark" tool="calculator" :onClick="onPressKey" />
-    <Message v-if="!!message" :message="message" />
+    <ControlPad tool="calculator" :onClick="onPressKey" />
   </div>
 </template>
 
@@ -40,16 +39,14 @@
 import { evaluate } from 'mathjs';
 import { formatResult } from '../utils';
 import ControlPad from './ControlPad.vue';
-import Message from './Message.vue';
 
 export default {
   name: 'Calculator',
   props: {
-    isDark: Boolean
+    setMessage: Function
   },
   components: {
-    ControlPad,
-    Message
+    ControlPad
   },
   data() {
     return {
@@ -57,7 +54,6 @@ export default {
       history: [],
       expression: '',
       lastBracket: null,
-      message: '',
       operations: ['%', '*', '/', '+', '-'],
       isCalculated: false,
       showedHistory: false
@@ -85,10 +81,6 @@ export default {
       } else if (value === '=' || value === 'Enter') {
         if (this.result) this.expression += this.result;
         this.calculate(this.expression);
-        if (!this.message) {
-          this.history.push(this.expression);
-        }
-        this.isCalculated = true;
       } else if (this.operations.includes(value)) {
         if (this.isCalculated) {
           this.expression = this.result + ` ${value} `;
@@ -135,13 +127,15 @@ export default {
       if (expression) {
         try {
           this.result = formatResult(evaluate(expression).toString(), 2, 8);
-          this.message = '';
+          this.history.push(this.expression);
+          this.isCalculated = true;
+          this.setMessage('');
         }
         catch {
           this.result = '';
+          this.expression = '';
           this.lastBracket = null;
-          this.message = 'Некорректное выражение';
-          setTimeout(() => { this.message = '' }, 1300);
+          this.setMessage('Некорректное выражение');
         }
       }
     },
@@ -169,35 +163,31 @@ export default {
 </script>
 
 <style lang="scss">
-.calculator {
-  .history {
-    &_content {
-      max-height: calc(100% - 1.5rem);
-    }
-    @media (max-width: 600px) {
-      height: calc(100vh - ((100vw - 5.5rem) / 4 * 5 + 4rem) - 7rem);
-      @media screen and (min-device-aspect-ratio: 5/9) {
-        height: calc(100vh - ((100vw - 5.5rem) / 4 * 5 + 4rem) - 4rem);
-        &_content {
-          font-size: .8rem;
-        }
-      }
-    }
+.history {
+  &_content {
+    max-height: calc(100% - 1.5rem);
   }
-  .current {
-    &_data {
-      .expression {
-        @media (max-width: 600px) {
-          height: calc(100vh - ((100vw - 5.5rem) / 4 * 5 + 4rem) - 13rem);
-          @media screen and (min-device-aspect-ratio: 5/9) {
-            height: calc(100vh - ((100vw - 5.5rem) / 4 * 5 + 4rem) - 7rem);
-            &_result {
-              margin-bottom: .5rem;
-              font-size: 3rem;
-            }
-          }
-        }
+}
+@media (max-width: 600px) {
+  .history {
+    height: calc(100vh - ((100vw - 5.5rem) / 4 * 5 + 4rem) - 8rem);
+  }
+  .expression {
+    height: calc(100vh - ((100vw - 5.5rem) / 4 * 5 + 4rem) - 13rem);
+  }
+  @media screen and (min-device-aspect-ratio: 5/9) {
+    .history {
+      height: calc(100vh - ((100vw - 5.5rem) / 4 * 5 + 4rem) - 7rem);
+      &_content {
+        font-size: .8rem;
       }
+    }
+    .expression {
+      height: calc(100vh - ((100vw - 5.5rem) / 4 * 5 + 4rem) - 10.5rem);
+    }
+    .current_result {
+      font-size: 3rem;
+      line-height: 1;
     }
   }
 }
