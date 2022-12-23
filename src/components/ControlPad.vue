@@ -42,15 +42,15 @@ export default defineComponent({
 
 <style lang="scss">
 .control_button {
-  width: calc((400px - 5.5rem) / 4);
-  height: calc((400px - 5.5rem) / 4);
+  width: calc((400px - 6rem) / 4);
+  height: calc((400px - 6rem) / 4);
   @media (max-width: 400px) {
-    width: calc((100vw - 5.5rem) / 4);
-    height: calc((100vw - 5.5rem) / 4);
-  }
-  @media (max-height: 650px) {
-    width: calc((90vw - 5.5rem) / 4);
-    height: calc((90vw - 5.5rem) / 4);
+    width: calc((100vw - 6rem) / 4);
+    height: calc((100vw - 6rem) / 4);
+    @media screen and (min-device-aspect-ratio: 5/9) {
+      width: calc((90vw - 6rem) / 4);
+      height: calc((90vw - 6rem) / 4);
+    }
   }
 }
 </style>

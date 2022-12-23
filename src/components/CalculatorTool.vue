@@ -1,6 +1,6 @@
 <template>
   <div class="calculator flex flex-col justify-between h-full">
-    <div v-show="showedHistory" class="history flex items-start">
+    <div v-show="showedHistory" class="history flex items-start h-52">
       <div class="cursor-pointer my-0 mx-2 text-4xl leading-5 dark:text-gray-400" @click="closeHistory">
         &#215;
       </div>
@@ -23,7 +23,7 @@
         <div class="cursor-pointer my-0 mx-2" @click="showHistory">
           <img src="../assets/icons/clock.svg" alt="">
         </div>
-        <div class="expression flex flex-col justify-end w-full sm:h-32">
+        <div class="expression flex flex-col justify-end w-full sm:h-36 sm:text-xl">
           <p class="max-h-full overflow-y-auto">{{ expression }}</p>
         </div>
       </div>
@@ -48,9 +48,10 @@ export default defineComponent({
   },
   emits: [ 'update-message' ],
   data() {
+    const history: string[] = [];
     return {
       result: '',
-      history: [''],
+      history: history,
       expression: '',
       isOpenBracket: false,
       operations: ['%', '*', '/', '+', '-'],
@@ -129,7 +130,7 @@ export default defineComponent({
       if (expression) {
         try {
           this.result = formatResult(evaluate(expression).toString(), 2, 8);
-          this.history.push(this.expression);
+          this.history.push(expression);
           this.isCalculated = true;
           this.$emit('update-message', '');
         }
@@ -167,25 +168,25 @@ export default defineComponent({
 <style lang="scss">
 .history {
   &_content {
-    max-height: calc(100% - 1.5rem);
+    max-height: calc(100% - 1rem);
   }
 }
 @media (max-width: 600px) {
   .history {
-    height: calc(100vh - ((100vw - 5.5rem) / 4 * 5 + 4rem) - 8rem);
+    height: calc(100vh - ((100vw - 6rem) / 4 * 5 + 5rem) - 9rem);
   }
   .expression {
-    height: calc(100vh - ((100vw - 5.5rem) / 4 * 5 + 4rem) - 13rem);
+    height: calc(100vh - ((100vw - 6rem) / 4 * 5 + 5rem) - 12rem);
   }
   @media screen and (min-device-aspect-ratio: 5/9) {
     .history {
-      height: calc(100vh - ((100vw - 5.5rem) / 4 * 5 + 4rem) - 7rem);
+      height: calc(100vh - ((90vw - 6rem) / 4 * 5 + 5rem) - 7rem);
       &_content {
         font-size: .8rem;
       }
     }
     .expression {
-      height: calc(100vh - ((100vw - 5.5rem) / 4 * 5 + 4rem) - 10.5rem);
+      height: calc(100vh - ((90vw - 6rem) / 4 * 5 + 5rem) - 10.5rem);
     }
     .current_result {
       font-size: 3rem;
