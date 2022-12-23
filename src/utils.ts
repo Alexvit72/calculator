@@ -16,7 +16,15 @@ export function formatResult(string:string, fraction: number, limit: number) {
   }
 }
 
-export const buttons = {
+type Button = {
+  [key: string]: string;
+};
+
+type Buttons = {
+  [key: string]: Button[];
+};
+
+export const buttons: Buttons = {
   calculator: [
     { sign: 'C', type: 'delete', value: 'c' },
     { sign: '&lt;', type: 'delete', value: 'back' },
@@ -66,7 +74,15 @@ export const buttons = {
   ]
 }
 
-export const bases = {
+type Base = {
+  [key: string]: string;
+};
+
+type Bases = {
+  [key: string]: Base[];
+};
+
+export const bases: Bases = {
   Площадь: [
     { name: 'Квадратные метры', symbol: 'm2' },
     { name: 'Гектары', symbol: 'hectare' },

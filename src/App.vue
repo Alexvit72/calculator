@@ -4,13 +4,13 @@
       <div class="menu flex justify-between w-full mt-8 mx-0 mb-4">
         <div class="menu_tool">
           <button
-            :class="`${tool === 'calculator' ? 'bg-green-600 dark:bg-white text-white dark:text-green-600' : 'text-gray-400 bg-opacity-0'} mx-2 my-0 pt-1 pb-2 px-2.5 text-xs font-bold rounded-2xl border-0`"
+            :class="`${tool === 'calculator' ? 'bg-green-400 dark:bg-white text-white dark:text-green-400' : 'text-gray-400 bg-opacity-0'} mx-2 my-0 pt-1 pb-2 px-2.5 text-xs font-bold rounded-2xl border-0`"
             @click="changeTool('calculator')"
           >
             Калькулятор
           </button>
           <button
-            :class="`${tool === 'converter' ? 'bg-green-600 text-white dark:bg-white dark:text-green-600' : 'text-gray-400 bg-opacity-0'} mx-2 my-0 pt-1 pb-2 px-2.5 text-xs font-bold rounded-2xl border-0`"
+            :class="`${tool === 'converter' ? 'bg-green-400 text-white dark:bg-white dark:text-green-400' : 'text-gray-400 bg-opacity-0'} mx-2 my-0 pt-1 pb-2 px-2.5 text-xs font-bold rounded-2xl border-0`"
             @click="changeTool('converter')"
           >
             Конвертер
@@ -22,9 +22,9 @@
         </button>
       </div>
       <div class="main flex-grow w-full relative text-gray-400 text-right">
-        <Calculator v-if="tool === 'calculator'" :setMessage="setMessage" />
-        <Converter v-if="tool === 'converter'" :setMessage="setMessage" />
-        <Message v-if="!!message" :message="message" />
+        <CalculatorTool v-if="tool === 'calculator'" @update-message="setMessage($event)" />
+        <ConverterTool v-if="tool === 'converter'" @update-message="setMessage($event)" />
+        <ErrorMessage v-if="!!message" :message="message" />
       </div>
     </div>
   </div>
@@ -32,16 +32,16 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import Calculator from './components/Calculator.vue';
-import Converter from './components/Converter.vue';
-import Message from './components/Message.vue';
+import CalculatorTool from './components/CalculatorTool.vue';
+import ConverterTool from './components/ConverterTool.vue';
+import ErrorMessage from './components/ErrorMessage.vue';
 
 export default defineComponent({
   name: 'App',
   components: {
-    Calculator,
-    Converter,
-    Message
+    CalculatorTool,
+    ConverterTool,
+    ErrorMessage
   },
   data() {
     return {
@@ -81,6 +81,7 @@ export default defineComponent({
 
 <style lang="scss">
 * {
+  -webkit-tap-highlight-color: transparent;
   scrollbar-width: none;
   &::-webkit-scrollbar {
     width: 0;

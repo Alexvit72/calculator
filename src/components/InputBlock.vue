@@ -2,7 +2,7 @@
   <div class="flex-grow flex flex-col justify-between items-start py-2 px-0 xs:pb-4">
     <select
       :value="unit"
-      class="bg-transparent text-sm sm:text-base text-gray-400 focus:outline-none" @change="$emit('update:unit', $event.target.value)"
+      class="bg-transparent text-sm sm:text-base text-gray-400 focus:outline-none cursor-pointer" @change="$emit('update:unit', $event.target.value)"
     >
       <option
         class="dark:bg-gray-800"
@@ -15,7 +15,7 @@
     </select>
     <div class="w-full text-xs sm:text-sm">
       <p v-show="isFocused">Введите значение:</p>
-      <p :class="`h-7 mt-2 px-1 text-xl leading-6 border-opacity-${isFocused ? '100' : '0'} border border-green-600 rounded`">
+      <p :class="`h-7 mt-2 px-1 text-xl leading-6 border-opacity-${isFocused ? '100' : '0'} border border-green-400 rounded`">
         {{ value }}
       </p>
     </div>

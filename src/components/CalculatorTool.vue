@@ -27,31 +27,26 @@
           <p class="max-h-full overflow-y-auto">{{ expression }}</p>
         </div>
       </div>
-      <div class="current_result flex justify-end text-green-600 overflow-x-hidden text-6xl sm:text-7xl">
+      <div class="current_result flex justify-end text-green-400 overflow-x-hidden text-6xl sm:text-7xl">
         {{ result }}
       </div>
     </div>
-    <ControlPad tool="calculator" :onClick="onPressKey" />
+    <ControlPad tool="calculator" @click="onPressKey($event)" />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue';
+import { defineComponent } from 'vue';
 import { evaluate } from 'mathjs';
 import { formatResult } from '../utils';
 import ControlPad from './ControlPad.vue';
 
 export default defineComponent({
-  name: 'Calculator',
-  props: {
-    setMessage: {
-      type: Function as PropType<() => void>,
-      required: true
-    }
-  },
+  name: 'CalculatorTool',
   components: {
     ControlPad
   },
+  emits: [ 'update-message' ],
   data() {
     return {
       result: '',
@@ -69,7 +64,7 @@ export default defineComponent({
   methods: {
     onPressKey(value: string) {
       if (value === 'back' || value === 'Backspace') {
-        if (this.result.at(-1) === '(' || this.result.at(-1) === ')') {
+        if (this.result[this.result.length - 1] === '(' || this.result[this.result.length - 1] === ')') {
           this.isOpenBracket = false;
         }
         this.result = this.result.slice(0, this.result.length - 1);
@@ -136,13 +131,13 @@ export default defineComponent({
           this.result = formatResult(evaluate(expression).toString(), 2, 8);
           this.history.push(this.expression);
           this.isCalculated = true;
-          this.setMessage('');
+          this.$emit('update-message', '');
         }
         catch {
           this.result = '';
           this.expression = '';
           this.isOpenBracket = false;
-          this.setMessage('Некорректное выражение');
+          this.$emit('update-message' ,'Некорректное выражение');
         }
       }
     },

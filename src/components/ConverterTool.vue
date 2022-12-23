@@ -25,36 +25,40 @@
       @update:unit="convert"
       :value="blocks.down.value"
     />
-    <ControlPad tool='converter' :disabledButtons="disabledButtons" :onClick="onPressKey" />
+    <ControlPad tool='converter' :disabledButtons="disabledButtons" @click="onPressKey($event)" />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue';
+import { defineComponent } from 'vue';
 import { evaluate } from 'mathjs';
 import ControlPad from './ControlPad.vue';
 import InputBlock from './InputBlock.vue';
 import { bases } from '../utils';
 
+type Block = {
+  [key: string]: string;
+};
+
+type Blocks = {
+  [key: string]: Block;
+};
+
 export default defineComponent({
-  name: 'Converter',
-  props: {
-    setMessage: {
-      type: Function as PropType<() => void>,
-      required: true
-    }
-  },
+  name: 'ConverterTool',
   components: {
     ControlPad,
     InputBlock
   },
+  emits: [ 'update-message' ],
   data() {
+    const blocks: Blocks = {
+      up: { value: '', unit: '' },
+      down: { value: '', unit: '' }
+    };
     return {
       currentBase: '',
-      blocks: {
-        up: { value: '', unit: '' },
-        down: { value: '', unit: '' }
-      },
+      blocks: blocks,
       currentFocus: 'up'
     }
   },
@@ -123,7 +127,7 @@ export default defineComponent({
         }
         if (this.currentBlock.value.length > 20) {
           this.currentBlock.value = this.currentBlock.value.slice(0, this.currentBlock.value.length - 1);
-          this.setMessage('Нельзя ввести больше 20 знаков');
+          this.$emit('update-message' ,'Нельзя ввести больше 20 знаков');
         }
       }
       this.convert();
@@ -134,7 +138,7 @@ export default defineComponent({
         this.targetBlock.value = this.currentBlock.value ? evaluate(`number(${this.currentBlock.value} ${this.currentBlock.unit}, ${this.targetBlock.unit})`).toString() : '';
       }
       catch {
-        this.setMessage('Некорректное выражение');
+        this.$emit('update-message' ,'Некорректное выражение');
       }
     }
   }
