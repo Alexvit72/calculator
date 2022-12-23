@@ -1,8 +1,8 @@
-export function formatResult(string, fraction, limit) {
-  let number = parseFloat(string);
+export function formatResult(string:string, fraction: number, limit: number) {
+  const number = parseFloat(string);
   if (string.length > limit) {
     if (string.includes('.')) {
-      let dotIndex = string.indexOf('.');
+      const dotIndex = string.indexOf('.');
       if (dotIndex < limit && number < 1e+21) {
         return number.toFixed(limit - (dotIndex + 1));
       } else {

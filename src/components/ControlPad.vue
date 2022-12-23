@@ -11,14 +11,18 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import { defineComponent } from 'vue';
 import { buttons } from '../utils';
 
-export default {
+export default defineComponent({
   name: 'ControlPad',
   props: {
     onClick: Function,
-    tool: String,
+    tool: {
+      type: String,
+      required: true
+    },
     disabledButtons: Array
   },
   computed: {
@@ -27,13 +31,13 @@ export default {
     }
   },
   methods: {
-    getDisabled(value) {
+    getDisabled(value: string) {
       if (this.tool === 'converter') {
         return (this.disabledButtons ? this.disabledButtons.includes(value) : false);
       } else return false;
     }
   }
-}
+});
 </script>
 
 <style lang="scss">

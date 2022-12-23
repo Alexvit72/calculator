@@ -35,15 +35,19 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import { defineComponent, PropType } from 'vue';
 import { evaluate } from 'mathjs';
 import { formatResult } from '../utils';
 import ControlPad from './ControlPad.vue';
 
-export default {
+export default defineComponent({
   name: 'Calculator',
   props: {
-    setMessage: Function
+    setMessage: {
+      type: Function as PropType<() => void>,
+      required: true
+    }
   },
   components: {
     ControlPad
@@ -51,9 +55,9 @@ export default {
   data() {
     return {
       result: '',
-      history: [],
+      history: [''],
       expression: '',
-      lastBracket: null,
+      isOpenBracket: false,
       operations: ['%', '*', '/', '+', '-'],
       isCalculated: false,
       showedHistory: false
@@ -63,10 +67,10 @@ export default {
     document.addEventListener('keydown', (e) => this.onPressKey(e.key));
   },
   methods: {
-    onPressKey(value) {
+    onPressKey(value: string) {
       if (value === 'back' || value === 'Backspace') {
         if (this.result.at(-1) === '(' || this.result.at(-1) === ')') {
-          this.lastBracket = null;
+          this.isOpenBracket = false;
         }
         this.result = this.result.slice(0, this.result.length - 1);
         if (this.isCalculated) {
@@ -76,7 +80,7 @@ export default {
       } else if (value === 'c') {
         this.result = '';
         this.expression = '';
-        this.lastBracket = null;
+        this.isOpenBracket = false;
         this.isCalculated = false;
       } else if (value === '=' || value === 'Enter') {
         if (this.result) this.expression += this.result;
@@ -90,7 +94,7 @@ export default {
         }
         this.result = '';
       } else {
-        if (isFinite(value)) {
+        if (isFinite(+value)) {
           if (this.result) {
             this.result += value;
           } else {
@@ -102,15 +106,18 @@ export default {
           }
         } else {
           if (value === '()') {
-            if (this.lastBracket === '(') {
-              this.lastBracket = ')';
+            if (this.isOpenBracket) {
+              this.isOpenBracket = false;
               this.result += ')';
             } else {
-              this.lastBracket = '(';
+              this.isOpenBracket = true;
               this.result += '(';
             }
-          } else if (value === '(' || value === ')') {
-            this.lastBracket = value;
+          } else if (value === '(') {
+            this.isOpenBracket = true;
+            this.result += value;
+          } else if (value === ')') {
+            this.isOpenBracket = false;
             this.result += value;
           } else if (value === '.') {
             if (this.result) {
@@ -123,7 +130,7 @@ export default {
       }
     },
 
-    calculate(expression) {
+    calculate(expression: string) {
       if (expression) {
         try {
           this.result = formatResult(evaluate(expression).toString(), 2, 8);
@@ -134,7 +141,7 @@ export default {
         catch {
           this.result = '';
           this.expression = '';
-          this.lastBracket = null;
+          this.isOpenBracket = false;
           this.setMessage('Некорректное выражение');
         }
       }
@@ -148,7 +155,7 @@ export default {
       this.showedHistory = false;
     },
 
-    onClickHistoryItem(item) {
+    onClickHistoryItem(item: string) {
       this.calculate(item);
       this.expression = '';
       this.closeHistory();
@@ -159,7 +166,7 @@ export default {
       this.closeHistory();
     }
   }
-}
+});
 </script>
 
 <style lang="scss">

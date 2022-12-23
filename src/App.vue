@@ -30,12 +30,13 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import { defineComponent } from 'vue';
 import Calculator from './components/Calculator.vue';
 import Converter from './components/Converter.vue';
 import Message from './components/Message.vue';
 
-export default {
+export default defineComponent({
   name: 'App',
   components: {
     Calculator,
@@ -57,10 +58,10 @@ export default {
     }
   },
   methods: {
-    changeTool(tool) {
+    changeTool(tool: string) {
       this.tool = tool;
     },
-    setMessage(message) {
+    setMessage(message: string) {
       this.message = message;
       setTimeout(() => {
         this.message = '';
@@ -75,7 +76,7 @@ export default {
       this.isDark = !this.isDark;
     }
   }
-}
+});
 </script>
 
 <style lang="scss">

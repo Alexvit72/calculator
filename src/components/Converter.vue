@@ -29,16 +29,20 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import { defineComponent, PropType } from 'vue';
 import { evaluate } from 'mathjs';
 import ControlPad from './ControlPad.vue';
 import InputBlock from './InputBlock.vue';
 import { bases } from '../utils';
 
-export default {
+export default defineComponent({
   name: 'Converter',
   props: {
-    setMessage: Function
+    setMessage: {
+      type: Function as PropType<() => void>,
+      required: true
+    }
   },
   components: {
     ControlPad,
@@ -65,7 +69,7 @@ export default {
       return this.blocks[this.currentFocus];
     },
     targetBlock() {
-      return this.blocks[Object.keys(this.blocks).filter((key) => key !== this.currentFocus)];
+      return this.blocks[Object.keys(this.blocks).filter((key) => key !== this.currentFocus)[0]];
     },
     disabledButtons() {
       let arr = [];
@@ -81,7 +85,7 @@ export default {
     document.addEventListener('keydown', (e) => this.onPressKey(e.key));
   },
   methods: {
-    changeBase(base) {
+    changeBase(base: string) {
       this.currentBase = base;
       this.blocks.up.unit = this.units[0].symbol;
       this.blocks.down.unit = this.units[1].symbol;
@@ -94,7 +98,7 @@ export default {
       this.blocks.down.value = '';
     },
 
-    onPressKey(value) {
+    onPressKey(value: string) {
       if (value === 'up' || value === 'down') {
         this.currentFocus = value;
       } else if (value === 'back' || value === 'Backspace') {
@@ -134,5 +138,5 @@ export default {
       }
     }
   }
-}
+});
 </script>
