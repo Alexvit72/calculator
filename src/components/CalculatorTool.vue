@@ -1,13 +1,13 @@
 <template>
   <div class="calculator flex flex-col justify-between h-full">
-    <div v-show="showedHistory" class="history flex items-start h-52">
+    <div v-show="showedHistory" class="history flex items-start">
       <div class="cursor-pointer my-0 mx-2 text-4xl leading-5 dark:text-gray-400" @click="closeHistory">
         &#215;
       </div>
       <div v-show="!!history.length" class="cursor-pointer my-1 mx-2" @click="clearHistory">
         <img src="../assets/icons/delete.svg" alt="">
       </div>
-      <div class="history_content w-full overflow-y-auto">
+      <div class="history_content w-full max-h-full overflow-y-auto">
         <p
           v-for="item in history"
           :key="item"
@@ -167,26 +167,24 @@ export default defineComponent({
 
 <style lang="scss">
 .history {
-  &_content {
-    max-height: calc(100% - 1rem);
-  }
+  height: calc(800px - ((400px - 6rem) / 4 * 5 + 5rem) - 7rem);
 }
 @media (max-width: 600px) {
   .history {
-    height: calc(100vh - ((100vw - 6rem) / 4 * 5 + 5rem) - 9rem);
+    height: calc(100vh - ((100vw - 6rem) / 4 * 5 + 5rem) - 7rem);
   }
   .expression {
     height: calc(100vh - ((100vw - 6rem) / 4 * 5 + 5rem) - 12rem);
   }
   @media screen and (min-device-aspect-ratio: 5/9) {
     .history {
-      height: calc(100vh - ((90vw - 6rem) / 4 * 5 + 5rem) - 7rem);
+      height: calc(100vh - ((90vw - 6rem) / 4 * 5 + 5rem) - 8rem);
       &_content {
         font-size: .8rem;
       }
     }
     .expression {
-      height: calc(100vh - ((90vw - 6rem) / 4 * 5 + 5rem) - 10.5rem);
+      height: calc(100vh - ((90vw - 6rem) / 4 * 5 + 5rem) - 12rem);
     }
     .current_result {
       font-size: 3rem;
