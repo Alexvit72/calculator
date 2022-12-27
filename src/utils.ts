@@ -74,12 +74,12 @@ export const buttons: Buttons = {
   ]
 }
 
-type Base = {
+export type Unit = {
   [key: string]: string;
 };
 
-type Bases = {
-  [key: string]: Base[];
+export type Bases = {
+  [key: string]: Unit[];
 };
 
 export const bases: Bases = {

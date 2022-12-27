@@ -1,9 +1,9 @@
 <template>
-  <div class="converter flex flex-col justify-between h-full divide-y divide-gray-200 dark:divide-gray-500">
-    <div class="converter_menu flex justify-between w-full overflow-x-auto pb-4">
+  <div class="flex flex-col justify-between h-full divide-y divide-gray-200 dark:divide-gray-500">
+    <div id="converter_menu" class="flex justify-between w-full overflow-x-auto pb-4">
       <button
         v-for="item in menuItems" :key="item"
-        :class="`converter_menu_button py-1 px-2.5 bg-opacity-0 text-xs text-gray-400 border border-gray-400 border-opacity-${currentBase === item ? '100' : '0'} rounded-3xl`"
+        :class="`py-1 px-2.5 bg-opacity-0 text-xs text-gray-400 border border-gray-400 border-opacity-${currentBase === item ? '100' : '0'} rounded-3xl`"
         @click="changeBase(item)"
       >
         {{ item }}
