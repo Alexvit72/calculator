@@ -31,7 +31,7 @@
         {{ result }}
       </div>
     </div>
-    <ControlPad tool="calculator" @click="onPressKey($event)" />
+    <ControlPad tool="Калькулятор" @click="onPressKey($event)" />
   </div>
 </template>
 

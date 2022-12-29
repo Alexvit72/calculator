@@ -32,7 +32,7 @@ export default defineComponent({
   },
   methods: {
     getDisabled(value: string) {
-      if (this.tool === 'converter') {
+      if (this.tool === 'Конвертер') {
         return (this.disabledButtons ? this.disabledButtons.includes(value) : false);
       } else return false;
     }

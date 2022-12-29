@@ -25,7 +25,7 @@
       @update:unit="convert"
       :value="blocks.down.value"
     />
-    <ControlPad tool='converter' :disabledButtons="disabledButtons" @click="onPressKey($event)" />
+    <ControlPad tool='Конвертер' :disabledButtons="disabledButtons" @click="onPressKey($event)" />
   </div>
 </template>
 

@@ -25,7 +25,7 @@ type Buttons = {
 };
 
 export const buttons: Buttons = {
-  calculator: [
+  Калькулятор: [
     { sign: 'C', type: 'delete', value: 'c' },
     { sign: '&lt;', type: 'delete', value: 'back' },
     { sign: '&#37;', type: 'operation', value: '%' },
@@ -51,7 +51,7 @@ export const buttons: Buttons = {
     { sign: '&#183;', type: 'number', value: '.' },
     { sign: '&#61;', type: 'operation', value: '=' }
   ],
-  converter: [
+  Конвертер: [
     { sign: '7', type: 'number', value: '7' },
     { sign: '8', type: 'number', value: '8' },
     { sign: '9', type: 'number', value: '9' },

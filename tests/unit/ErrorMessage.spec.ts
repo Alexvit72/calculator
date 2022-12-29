@@ -10,7 +10,7 @@ describe('ErrorMessage.vue', () => {
     const wrapper = shallowMount(ErrorMessage, {
       props: { message }
     });
-    expect(wrapper.text()).to.include(message);
+    expect(wrapper.text()).to.equal(message);
   });
 
 });
