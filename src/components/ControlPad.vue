@@ -3,7 +3,7 @@
     <button
       v-for="button in buttons" :key="button.sign"
       v-html="button.sign"
-      :class="`control_button bg-transparent border-0 rounded-full text-2xl xs:text-3xl sm:text-4xl disabled:text-gray-200 ${button.type === 'operation' ? 'pb-1 text-green-400 dark:bg-white dark:disabled:text-gray-200' : (button.type === 'delete' ? 'pb-1 text-gray-500 dark:text-white dark:bg-gray-400' : 'text-gray-400  dark:disabled:text-gray-500')}`"
+      :class="`control_button bg-transparent border-0 rounded-full text-2xl xs:text-3xl sm:text-4xl disabled:text-gray-200 ${button.type === 'operation' ? 'text-green-400 dark:bg-white dark:disabled:text-gray-200' : (button.type === 'delete' ? 'text-gray-500 dark:text-white dark:bg-gray-400' : 'text-gray-400  dark:disabled:text-gray-500')}`"
       :disabled="getDisabled(button.value)"
       @click="$emit('click', button.value)"
     >

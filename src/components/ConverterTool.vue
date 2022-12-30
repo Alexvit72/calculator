@@ -3,7 +3,7 @@
     <div id="converter_menu" class="flex justify-between w-full overflow-x-auto pb-4">
       <button
         v-for="item in menuItems" :key="item"
-        :class="`py-1 px-2.5 bg-opacity-0 text-xs text-gray-400 border border-gray-400 border-opacity-${currentBase === item ? '100' : '0'} rounded-3xl`"
+        :class="getMenuButtonClass(item)"
         @click="changeBase(item)"
       >
         {{ item }}
@@ -89,6 +89,10 @@ export default defineComponent({
     document.addEventListener('keydown', (e) => this.onPressKey(e.key));
   },
   methods: {
+    getMenuButtonClass(item: string) {
+      return `py-1 px-2.5 bg-opacity-0 text-xs text-gray-400 rounded-3xl ${this.currentBase === item ? 'border border-gray-400' : ''}`;
+    },
+
     changeBase(base: string) {
       this.currentBase = base;
       this.blocks.up.unit = this.units[0].symbol;

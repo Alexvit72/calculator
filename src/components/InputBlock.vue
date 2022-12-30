@@ -15,7 +15,7 @@
     </select>
     <div class="w-full text-xs sm:text-sm">
       <p v-show="isFocused">Введите значение:</p>
-      <p :class="`h-7 mt-2 px-1 text-xl leading-6 border-opacity-${isFocused ? '100' : '0'} border border-green-400 rounded`">
+      <p :class="getInputClass()">
         {{ value }}
       </p>
     </div>
@@ -33,6 +33,11 @@ export default defineComponent({
     units: Array,
     isFocused: Boolean
   },
-  emits: [ 'update:unit' ]
+  emits: [ 'update:unit' ],
+  methods: {
+    getInputClass() {
+      return `h-7 mt-2 px-1 text-xl leading-6 ${this.isFocused ? 'border border-green-400' : ''} rounded`;
+    }
+  }
 });
 </script>
